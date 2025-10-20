@@ -15,7 +15,7 @@ const LoginPage = () => {
       localStorage.setItem("token", res.token);
       localStorage.setItem("user", JSON.stringify(res.user));
 
-      if (res.user.roleID === 2) {
+      if (res.user.roleID === 1) {
         navigate("/adminHomePage");
       } else {
         navigate("/staffHomePage");

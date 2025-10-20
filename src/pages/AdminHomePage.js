@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Menu, X, Bell, UserCircle } from "lucide-react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import DashboardContent from "./DashboardContent";
-import Sidebar from "./Sidebar";
+import Sidebar from "../components/Sidebar";
 
 export default function AdminHomePage() {
   const navigate = useNavigate();
