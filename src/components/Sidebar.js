@@ -37,6 +37,14 @@ export default function Sidebar({ isOpen, onLogout, onSelectPage }) {
         { label: "Thêm sản phẩm", path: "/appLayout/add-product" },
       ],
     },
+    {
+      id: "activities",
+      label: "Hoạt động",
+      icon: FileText,
+      submenu: [
+        { label: "Danh sách hoạt động", page: "activityList" }
+      ],
+    },
   ];
 
   return (
@@ -98,7 +106,7 @@ export default function Sidebar({ isOpen, onLogout, onSelectPage }) {
                 expandedMenu === item.id &&
                 item.submenu.map((sub, idx) => {
                   const isSubActive =
-                    sub.path === currentPath || false; // check path active
+                    sub.path === currentPath || false; 
                   return (
                     <button
                       key={idx}

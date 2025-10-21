@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import StaffList from "../components/staffList";
+import ActivityPage from "../components/ActivityList";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Menu } from "lucide-react";
 
 export default function AppLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [currentPage, setCurrentPage] = useState(null);
+  const [currentPage, setCurrentPage] = useState("");
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -19,8 +20,14 @@ export default function AppLayout() {
   };
 
   const renderPage = () => {
-    if (currentPage === "staffList") return <StaffList />;
-    return <Outlet />; // fallback cho các route thật
+    switch (currentPage) {
+      case "staffList":
+        return <StaffList />;
+      case "activityList":
+        return <ActivityPage />;
+      default:
+        return <Outlet />;
+    }
   };
 
   return (
