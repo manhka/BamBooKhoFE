@@ -5,10 +5,8 @@ import {
   Users,
   Settings,
   BarChart3,
-  FileText,
   LogOut,
   ChevronDown,
-  ShoppingBag,
   ShoppingCart,
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -40,9 +38,15 @@ export default function Sidebar({ isOpen, onLogout }) {
       label: "Quản lý sản phẩm",
       icon: ShoppingCart,
       submenu: [
-        { label: "Danh sách sản phẩm", path: "/employees" },
+        { label: "Danh sách sản phẩm", path: "/product-list" },
         { label: "Thêm sản phẩm mới", path: "/register" },
       ],
+    },
+    {
+      id: "settings",
+      label: "Cài đặt",
+      icon: Settings,
+      path: "/settings",
     },
   ];
 
@@ -54,8 +58,10 @@ export default function Sidebar({ isOpen, onLogout }) {
         background: "linear-gradient(180deg, #ffffff, #f8fafc)",
         borderRight: "1px solid #e2e8f0",
         transform: isOpen ? "translateX(0)" : "translateX(-100%)",
-        transition: "transform 0.35s ease",
-        zIndex: 1040,
+        transition: "transform 0.35s ease, opacity 0.3s ease",
+        opacity: isOpen ? 1 : 0,
+        zIndex: 1100,
+        overflowY: "auto",
       }}
     >
       <div className="d-flex flex-column justify-content-between h-100 p-3">
