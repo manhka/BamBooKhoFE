@@ -7,27 +7,28 @@ export default function AppLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   return (
-    <div className="d-flex" style={{ minHeight: "100vh" }}>
-      {/* Sidebar */}
+    <div className="d-flex" style={{ minHeight: "100vh", overflow: "hidden" }}>
+      {/* ===== Sidebar ===== */}
       <Sidebar isOpen={isSidebarOpen} />
 
-      {/* Nội dung chính */}
+      {/* ===== Main content ===== */}
       <div
-        className="flex-grow-1 position-relative"
+        className="flex-grow-1 d-flex flex-column"
         style={{
           marginLeft: isSidebarOpen ? "270px" : "0",
-          transition: "margin-left 0.35s ease",
-          backgroundColor: "#f8fafc",
+          width: isSidebarOpen ? "calc(100% - 270px)" : "100%",
+          transition: "all 0.35s ease",
+          backgroundColor: "#ffffff",
           minHeight: "100vh",
         }}
       >
-        {/* Thanh header chứa nút toggle */}
+        {/* ===== Header ===== */}
         <div
-          className="d-flex align-items-center p-3 shadow-sm bg-white"
+          className="d-flex align-items-center p-3  "
           style={{
-            position: "sticky",
+            position: "fixed",
             top: 0,
-            zIndex: 1000,
+            height: "72px",
           }}
         >
           <button
@@ -38,8 +39,13 @@ export default function AppLayout() {
           </button>
         </div>
 
-        {/* Khu vực nội dung */}
-        <div className="p-4">
+        {/* ===== Nội dung chính ===== */}
+        <div
+          className="flex-grow-1 overflow-auto"
+          style={{
+            backgroundColor: "#ffffff",
+          }}
+        >
           <Outlet />
         </div>
       </div>
