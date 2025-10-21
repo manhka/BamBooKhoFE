@@ -14,12 +14,7 @@ const LoginPage = () => {
       const res = await login(username, password);
       localStorage.setItem("token", res.token);
       localStorage.setItem("user", JSON.stringify(res.user));
-
-      if (res.user.roleID === 1) {
-        navigate("/dashboard");
-      } else {
-        navigate("/staffHomePage");
-      }
+      navigate("/appLayout");
     } catch (err) {
       setError(err.response?.data?.message || "Đăng nhập thất bại");
     }

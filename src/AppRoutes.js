@@ -6,12 +6,11 @@ import RegisterPage from "./pages/RegisterPage";
 import Dashboard from "./pages/Dashboard";
 const AppRoutes = () => (
   <Routes>
-    <Route path="/" element={<AppLayout />}>
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route path="*" element={<LoginPage />} />
-      <Route path="dashboard" element={<Dashboard />} />
-    </Route>
+    <Route path="/" element={<LoginPage />} />{" "}
+    <Route path="/register" element={<RegisterPage />} />{" "}
+    <Route path="/dashboard" element={<Dashboard />} />{" "}
+    <Route path="/appLayout" element={<AppLayout />} />{" "}
+    <Route path="*" element={<LoginPage />} />{" "}
   </Routes>
 );
 
