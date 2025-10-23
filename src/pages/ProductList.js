@@ -4,15 +4,15 @@ import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import { getProducts } from "../services/productService";
 import { getAllBrands } from "../services/brandService";
 import { getAllCategories } from "../services/categoryService";
-
+import { Link } from "react-router-dom";
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
   const [filters, setFilters] = useState({
-    search: "",
-    brand: "",
-    category: "",
+    ProductName: "",
+    BrandID: "",
+    CategoryID: "",
   });
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -41,9 +41,9 @@ const ProductList = () => {
       setLoading(true);
       try {
         const result = await getProducts({
-          keyword: filters.search,
-          brand: filters.brand,
-          category: filters.category,
+          BrandID: filters.BrandID,
+          CategoryID: filters.CategoryID,
+          ProductName: filters.ProductName,
         });
         setProducts(result.data || []);
       } catch (err) {
@@ -80,7 +80,9 @@ const ProductList = () => {
       >
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h3 className="m-0">Danh sách sản phẩm</h3>
-          <button className="btn btn-primary">+ Thêm sản phẩm</button>
+          <Link to="/products/add" className="btn btn-primary">
+            + Thêm sản phẩm
+          </Link>
         </div>
 
         <div className="row g-2">
@@ -88,9 +90,9 @@ const ProductList = () => {
             <input
               type="text"
               className="form-control"
-              name="search"
+              name="ProductName"
               placeholder="🔍 Tìm theo tên hoặc mô tả"
-              value={filters.search}
+              value={filters.ProductName}
               onChange={handleFilterChange}
             />
           </div>
@@ -98,13 +100,13 @@ const ProductList = () => {
           <div className="col-md-3">
             <select
               className="form-select"
-              name="brand"
-              value={filters.brand}
+              name="BrandID"
+              value={filters.BrandID}
               onChange={handleFilterChange}
             >
               <option value="">Tất cả thương hiệu</option>
               {brands.map((b) => (
-                <option key={b.BrandID} value={b.BrandName}>
+                <option key={b.BrandID} value={b.BrandID}>
                   {b.BrandName}
                 </option>
               ))}
@@ -114,13 +116,13 @@ const ProductList = () => {
           <div className="col-md-3">
             <select
               className="form-select"
-              name="category"
-              value={filters.category}
+              name="CategoryID"
+              value={filters.CategoryID}
               onChange={handleFilterChange}
             >
               <option value="">Tất cả danh mục</option>
               {categories.map((c) => (
-                <option key={c.CategoryID} value={c.CategoryName}>
+                <option key={c.CategoryID} value={c.CategoryID}>
                   {c.CategoryName}
                 </option>
               ))}
@@ -211,9 +213,12 @@ const ProductList = () => {
                     <button className="btn btn-sm btn-info me-1">
                       <FaEye />
                     </button>
-                    <button className="btn btn-sm btn-success me-1">
+                    <Link
+                      to={`/products/update/${p.BarcodeProduct}`}
+                      className="btn btn-sm btn-success me-1"
+                    >
                       <FaEdit />
-                    </button>
+                    </Link>
                     <button className="btn btn-sm btn-danger">
                       <FaTrash />
                     </button>

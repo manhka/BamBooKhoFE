@@ -5,6 +5,8 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import Dashboard from "./pages/Dashboard";
 import ProductList from "./pages/ProductList";
+import AddProduct from "./pages/AddProduct";
+import UpdateProduct from "./pages/UpdateProduct";
 
 const AppRoutes = () => (
   <Routes>
@@ -13,7 +15,9 @@ const AppRoutes = () => (
       <Route path="/register" element={<RegisterPage />} />
       <Route path="*" element={<LoginPage />} />
       <Route path="dashboard" element={<Dashboard />} />
-      <Route path="product-list" element={<ProductList />} />
+      <Route path="products/list" element={<ProductList />} />
+      <Route path="products/add" element={<AddProduct />} />
+      <Route path="products/update/:barcode" element={<UpdateProduct />} />
     </Route>
   </Routes>
 );
