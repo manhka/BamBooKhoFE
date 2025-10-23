@@ -10,6 +10,7 @@ export const API_ENDPOINTS = {
     DETAIL: (barcode) => `/products/details/${barcode}`,
     CREATE: "/products/create",
     UPDATE: (barcode) => `/products/update/${barcode}`,
+    ARCHIVE: (barcode) => `/products/archive/${barcode}`,
   },
   CATEGORIES: {
     LIST: "/categories",

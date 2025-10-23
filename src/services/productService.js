@@ -58,3 +58,21 @@ export const updateProduct = async (barcode, productData) => {
     throw error.response?.data || { message: error.message };
   }
 };
+export const archiveProduct = async (barcode, archive = true) => {
+  try {
+    const res = await api.patch(
+      API_ENDPOINTS.PRODUCTS.ARCHIVE(barcode),
+      {},
+      {
+        params: { archive },
+      }
+    );
+    return res.data;
+  } catch (error) {
+    console.error(
+      "archiveProduct error:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || { message: error.message };
+  }
+};

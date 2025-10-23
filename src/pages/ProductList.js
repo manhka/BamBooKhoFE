@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
-import { getProducts } from "../services/productService";
+import { getProducts, archiveProduct } from "../services/productService";
 import { getAllBrands } from "../services/brandService";
 import { getAllCategories } from "../services/categoryService";
 import { Link } from "react-router-dom";
+
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [brands, setBrands] = useState([]);
@@ -18,6 +19,10 @@ const ProductList = () => {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
+
+  // Modal state
+  const [modalProduct, setModalProduct] = useState(null);
+  const [modalLoading, setModalLoading] = useState(false);
 
   // --- Fetch danh sách thương hiệu & danh mục ---
   useEffect(() => {
@@ -66,6 +71,29 @@ const ProductList = () => {
   const indexOfFirst = indexOfLast - pageSize;
   const currentProducts = products.slice(indexOfFirst, indexOfLast);
   const totalPages = Math.ceil(products.length / pageSize);
+
+  // --- Archive / Restore product ---
+  const handleArchive = async () => {
+    if (!modalProduct) return;
+    try {
+      setModalLoading(true);
+      const res = await archiveProduct(
+        modalProduct.BarcodeProduct,
+        !modalProduct.IsArchive
+      );
+      // Update product in local state
+      setProducts((prev) =>
+        prev.map((p) =>
+          p.BarcodeProduct === modalProduct.BarcodeProduct ? res.data : p
+        )
+      );
+      setModalProduct(null);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setModalLoading(false);
+    }
+  };
 
   return (
     <div className="container-fluid">
@@ -168,15 +196,19 @@ const ProductList = () => {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan="9" className="text-center">
+                <td colSpan="10" className="text-center">
                   Đang tải...
                 </td>
               </tr>
             ) : currentProducts.length > 0 ? (
               currentProducts.map((p) => (
-                <tr key={p.BarcodeProduct}>
+                <tr
+                  key={p.BarcodeProduct}
+                  className={p.IsArchive ? "table-secondary" : ""}
+                  style={p.IsArchive ? { opacity: 0.5 } : {}}
+                >
                   <td>
-                    <input type="checkbox" />
+                    <input type="checkbox" disabled={p.IsArchive} />
                   </td>
                   <td>
                     <div className="d-flex align-items-center">
@@ -210,20 +242,27 @@ const ProductList = () => {
                   <td>{p.SalePrice?.toLocaleString()}₫</td>
                   <td>{p.Brand?.BrandName}</td>
                   <td>{p.NumberOfProduct}</td>
+                  <td>{p.IsArchive ? "Đã lưu trữ" : "Hoạt động"}</td>{" "}
+                  {/* Cột trạng thái */}
                   <td>
                     <Link
                       to={`/products/details/${p.BarcodeProduct}`}
                       className="btn btn-sm btn-success me-1"
+                      disabled={p.IsArchive}
                     >
                       <FaEye />
                     </Link>
                     <Link
                       to={`/products/update/${p.BarcodeProduct}`}
                       className="btn btn-sm btn-success me-1"
+                      disabled={p.IsArchive}
                     >
                       <FaEdit />
                     </Link>
-                    <button className="btn btn-sm btn-danger">
+                    <button
+                      className="btn btn-sm btn-danger"
+                      onClick={() => setModalProduct(p)}
+                    >
                       <FaTrash />
                     </button>
                   </td>
@@ -231,7 +270,7 @@ const ProductList = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="9" className="text-center text-muted">
+                <td colSpan="10" className="text-center text-muted">
                   Không có dữ liệu
                 </td>
               </tr>
@@ -261,6 +300,58 @@ const ProductList = () => {
             Trang sau →
           </button>
         </div>
+      )}
+
+      {/* Modal Archive */}
+      {modalProduct && (
+        <>
+          <div className="modal fade show d-block" tabIndex="-1">
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">
+                    {modalProduct.IsArchive
+                      ? "Khôi phục sản phẩm"
+                      : "Lưu trữ sản phẩm"}
+                  </h5>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    onClick={() => setModalProduct(null)}
+                  ></button>
+                </div>
+                <div className="modal-body">
+                  <p>
+                    {modalProduct.IsArchive
+                      ? "Bạn có muốn khôi phục sản phẩm này không?"
+                      : "Bạn có chắc muốn lưu trữ sản phẩm này không?"}
+                  </p>
+                </div>
+                <div className="modal-footer">
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => setModalProduct(null)}
+                  >
+                    Hủy
+                  </button>
+                  <button
+                    className="btn btn-danger"
+                    onClick={handleArchive}
+                    disabled={modalLoading}
+                  >
+                    {modalLoading
+                      ? "Đang xử lý..."
+                      : modalProduct.IsArchive
+                      ? "Khôi phục"
+                      : "Lưu trữ"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* backdrop */}
+          <div className="modal-backdrop fade show"></div>
+        </>
       )}
     </div>
   );
