@@ -10,7 +10,8 @@ const ProductList = () => {
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
   const [filters, setFilters] = useState({
-    ProductName: "",
+    keyword: "",
+    BarcodeProduct: "",
     BrandID: "",
     CategoryID: "",
   });
@@ -43,7 +44,7 @@ const ProductList = () => {
         const result = await getProducts({
           BrandID: filters.BrandID,
           CategoryID: filters.CategoryID,
-          ProductName: filters.ProductName,
+          keyword: filters.keyword,
         });
         setProducts(result.data || []);
       } catch (err) {
@@ -90,9 +91,9 @@ const ProductList = () => {
             <input
               type="text"
               className="form-control"
-              name="ProductName"
-              placeholder="🔍 Tìm theo tên hoặc mô tả"
-              value={filters.ProductName}
+              name="keyword"
+              placeholder="🔍 Tìm theo tên hoặc mã"
+              value={filters.keyword}
               onChange={handleFilterChange}
             />
           </div>
@@ -210,9 +211,12 @@ const ProductList = () => {
                   <td>{p.Brand?.BrandName}</td>
                   <td>{p.NumberOfProduct}</td>
                   <td>
-                    <button className="btn btn-sm btn-info me-1">
+                    <Link
+                      to={`/products/details/${p.BarcodeProduct}`}
+                      className="btn btn-sm btn-success me-1"
+                    >
                       <FaEye />
-                    </button>
+                    </Link>
                     <Link
                       to={`/products/update/${p.BarcodeProduct}`}
                       className="btn btn-sm btn-success me-1"

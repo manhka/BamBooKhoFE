@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import ProductList from "./pages/ProductList";
 import AddProduct from "./pages/AddProduct";
 import UpdateProduct from "./pages/UpdateProduct";
+import ProductDetail from "./pages/ProductDetail";
 
 const AppRoutes = () => (
   <Routes>
@@ -18,6 +19,7 @@ const AppRoutes = () => (
       <Route path="products/list" element={<ProductList />} />
       <Route path="products/add" element={<AddProduct />} />
       <Route path="products/update/:barcode" element={<UpdateProduct />} />
+      <Route path="products/details/:barcode" element={<ProductDetail />} />
     </Route>
   </Routes>
 );

@@ -41,7 +41,7 @@ export default function AppLayout() {
 
         {/* ===== Nội dung chính ===== */}
         <div
-          className="flex-grow-1 overflow-auto"
+          className="flex-grow-1 overflow-auto "
           style={{
             backgroundColor: "#ffffff",
           }}

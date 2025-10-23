@@ -6,110 +6,6 @@ import { getAllCategories } from "../services/categoryService";
 import { getAllBrands } from "../services/brandService";
 import { getProductByBarcode, updateProduct } from "../services/productService";
 
-const categoryFieldMap = {
-  "Desktop PC": [
-    { label: "CPU", type: "text" },
-    { label: "GPU", type: "text" },
-    { label: "RAM", type: "text" },
-    { label: "Storage", type: "text" },
-    { label: "Power Supply", type: "text" },
-    { label: "Case", type: "text" },
-    { label: "Operating System", type: "text" },
-    { label: "Warranty", type: "text" },
-  ],
-  Laptop: [
-    { label: "CPU", type: "text" },
-    { label: "GPU", type: "text" },
-    { label: "RAM", type: "text" },
-    { label: "Storage", type: "text" },
-    { label: "Display", type: "text" },
-    { label: "Battery", type: "text" },
-    { label: "Weight", type: "number" },
-    { label: "Ports", type: "text" },
-    { label: "Operating System", type: "text" },
-  ],
-  CPU: [
-    { label: "Socket", type: "text" },
-    { label: "Core Count", type: "number" },
-    { label: "Thread Count", type: "number" },
-    { label: "Base Clock (GHz)", type: "number" },
-    { label: "Boost Clock (GHz)", type: "number" },
-    { label: "TDP (W)", type: "number" },
-    { label: "Integrated GPU", type: "text" },
-  ],
-  GPU: [
-    { label: "Chipset", type: "text" },
-    { label: "VRAM (GB)", type: "number" },
-    { label: "Memory Type", type: "text" },
-    { label: "Bus Width (bit)", type: "number" },
-    { label: "Clock Speed (MHz)", type: "number" },
-    { label: "Output Ports", type: "text" },
-    { label: "TDP (W)", type: "number" },
-  ],
-  Motherboard: [
-    { label: "Socket", type: "text" },
-    { label: "Chipset", type: "text" },
-    { label: "Form Factor", type: "text" },
-    { label: "RAM Type", type: "text" },
-    { label: "RAM Slots", type: "number" },
-    { label: "PCIe Slots", type: "number" },
-    { label: "Storage Ports", type: "text" },
-    { label: "Network Support", type: "text" },
-  ],
-  RAM: [
-    { label: "Capacity (GB)", type: "number" },
-    { label: "Type", type: "text" },
-    { label: "Speed (MHz)", type: "number" },
-    { label: "CAS Latency", type: "number" },
-    { label: "Voltage", type: "number" },
-    { label: "Kit (1x8GB / 2x8GB)", type: "text" },
-  ],
-  Storage: [
-    { label: "Type (SSD/HDD)", type: "text" },
-    { label: "Capacity", type: "text" },
-    { label: "Interface (SATA/NVMe)", type: "text" },
-    { label: "Form Factor", type: "text" },
-    { label: "Read Speed (MB/s)", type: "number" },
-    { label: "Write Speed (MB/s)", type: "number" },
-  ],
-  "Power Supply": [
-    { label: "Wattage", type: "number" },
-    { label: "Efficiency Rating", type: "text" },
-    { label: "Modular (Yes/No)", type: "text" },
-    { label: "Fan Size (mm)", type: "number" },
-  ],
-  Cooling: [
-    { label: "Type (Air/Liquid)", type: "text" },
-    { label: "Fan Count", type: "number" },
-    { label: "Radiator Size", type: "text" },
-    { label: "Noise Level (dBA)", type: "number" },
-    { label: "RGB (Yes/No)", type: "text" },
-  ],
-  Case: [
-    { label: "Form Factor", type: "text" },
-    { label: "Material", type: "text" },
-    { label: "Color", type: "text" },
-    { label: "Fan Support", type: "text" },
-    { label: "Radiator Support", type: "text" },
-    { label: "Side Panel Type", type: "text" },
-  ],
-  Monitor: [
-    { label: "Size (inch)", type: "number" },
-    { label: "Resolution", type: "text" },
-    { label: "Refresh Rate (Hz)", type: "number" },
-    { label: "Panel Type", type: "text" },
-    { label: "Response Time (ms)", type: "number" },
-    { label: "Brightness (nits)", type: "number" },
-    { label: "Ports", type: "text" },
-  ],
-  Peripheral: [
-    { label: "Type (Keyboard/Mouse/Headset...)", type: "text" },
-    { label: "Connection (Wired/Wireless)", type: "text" },
-    { label: "Features (RGB, DPI, Mic...)", type: "text" },
-    { label: "Compatibility", type: "text" },
-  ],
-};
-
 export default function UpdateProduct() {
   const { barcode } = useParams();
   const navigate = useNavigate();
@@ -117,25 +13,19 @@ export default function UpdateProduct() {
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
   const [product, setProduct] = useState(null);
-  const [extraFields, setExtraFields] = useState({});
+  const [variants, setVariants] = useState([]);
+  const [errors, setErrors] = useState({}); // validation errors
 
   useEffect(() => {
-    getAllCategories().then((res) => {
-      setCategories(res.data || res);
-    });
-    getAllBrands().then((res) => {
-      setBrands(res.data || res);
-    });
+    getAllCategories().then((res) => setCategories(res.data || res));
+    getAllBrands().then((res) => setBrands(res.data || res));
 
     if (barcode) {
       getProductByBarcode(barcode).then((res) => {
-        console.log("🔍 Product API raw response:", res);
-
         const data = res.data || res;
-        console.log("✅ Parsed product data:", data);
-
-        setProduct(data.product);
-        setExtraFields(data.ExtraInfo || {});
+        const p = data.product;
+        setProduct(p);
+        setVariants(p.Variants || []);
       });
     }
   }, [barcode]);
@@ -146,18 +36,67 @@ export default function UpdateProduct() {
     );
   }
 
+  // Cập nhật dữ liệu chung
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProduct({ ...product, [name]: value });
   };
 
-  const handleExtraFieldChange = (label, value) => {
-    setExtraFields({ ...extraFields, [label]: value });
+  // Cập nhật variant
+  const handleVariantChange = (index, field, value) => {
+    const updated = [...variants];
+    updated[index][field] = value;
+    setVariants(updated);
+  };
+  // Thêm nhật variant
+  const handleAddVariant = () => {
+    setVariants([
+      ...variants,
+      { AttributeName: "", Value: "", Unit: "", Description: "" },
+    ]);
+  };
+  // Validation
+  const validate = () => {
+    const newErrors = {};
+
+    if (!product.ProductName || product.ProductName.trim() === "") {
+      newErrors.ProductName = "Tên sản phẩm bắt buộc";
+    }
+
+    if (!product.CostPrice || Number(product.CostPrice) <= 0) {
+      newErrors.CostPrice = "Giá nhập phải lớn hơn 0";
+    }
+
+    if (!product.SalePrice || Number(product.SalePrice) <= 0) {
+      newErrors.SalePrice = "Giá bán phải lớn hơn 0";
+    }
+
+    if (!product.BrandID) {
+      newErrors.BrandID = "Chọn thương hiệu";
+    }
+
+    variants.forEach((v, i) => {
+      if (!v.AttributeName || v.AttributeName.trim() === "") {
+        newErrors[`variant_name_${i}`] = "Tên thuộc tính bắt buộc";
+      }
+      if (!v.Value || v.Value.trim() === "") {
+        newErrors[`variant_value_${i}`] = "Giá trị bắt buộc";
+      }
+    });
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
+  // Gửi cập nhật
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const updated = { ...product, ExtraInfo: extraFields };
+    if (!validate()) return;
+
+    const updated = {
+      ...product,
+      Variants: variants,
+    };
     await updateProduct(product.BarcodeProduct, updated);
     navigate("/products/list");
   };
@@ -167,127 +106,287 @@ export default function UpdateProduct() {
     "";
 
   return (
-    <div className="container-fluid p-4 mt-5">
-      <div className="card shadow-sm">
-        <div className="card-body">
-          <h3 className="mb-4 text-primary">Cập nhật sản phẩm</h3>
+    <div
+      className="d-flex justify-content-center align-items-center"
+      style={{ height: "90vh", backgroundColor: "#ffffff", marginTop: "60px" }}
+    >
+      <div
+        className="card shadow-lg border-0 mt-4"
+        style={{ width: "98%", height: "90vh", overflowY: "auto" }}
+      >
+        <h3 className="mb-4 text-primary ms-3 mt-3">🛠️ Cập nhật sản phẩm</h3>
+
+        <div
+          className="card-body overflow-auto"
+          style={{ maxHeight: "90vh", padding: "30px" }}
+        >
           <form onSubmit={handleSubmit}>
-            {/* Tên sản phẩm */}
-            <div className="mb-3">
-              <label className="form-label">Tên sản phẩm</label>
-              <input
-                type="text"
-                name="ProductName"
-                className="form-control"
-                value={product.ProductName}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            {/* Danh mục (không được đổi) */}
-            <div className="mb-3">
-              <label className="form-label">Danh mục</label>
-              <input
-                type="text"
-                className="form-control"
-                value={selectedCategory}
-                disabled
-              />
-            </div>
-
-            {/* Thương hiệu */}
-            <div className="mb-3">
-              <label className="form-label">Thương hiệu</label>
-              <select
-                name="BrandID"
-                className="form-select"
-                value={product.BrandID}
-                onChange={handleChange}
-              >
-                {brands.map((b) => (
-                  <option key={b.BrandID} value={b.BrandID}>
-                    {b.BrandName}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Hình ảnh */}
-            <div className="mb-3">
-              <label className="form-label">Hình ảnh (URL)</label>
-              <input
-                type="text"
-                name="Image"
-                className="form-control"
-                value={product.Image || ""}
-                onChange={handleChange}
-              />
-            </div>
-
-            {/* Mô tả */}
-            <div className="mb-3">
-              <label className="form-label">Mô tả</label>
-              <textarea
-                name="Description"
-                className="form-control"
-                rows="3"
-                value={product.Description || ""}
-                onChange={handleChange}
-              />
-            </div>
-
-            {/* Giá */}
             <div className="row">
-              <div className="col-md-6 mb-3">
-                <label className="form-label">Giá nhập (VNĐ)</label>
+              {/* Ảnh sản phẩm */}
+              <div className="mb-4 text-center col-md-4">
+                <img
+                  src={
+                    product.Image && product.Image.trim() !== ""
+                      ? product.Image
+                      : "https://agrimart.in/uploads/vendor_banner_image/default.jpg"
+                  }
+                  alt={product.ProductName || "Preview"}
+                  className="img-thumbnail mb-2 shadow-sm"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src =
+                      "https://agrimart.in/uploads/vendor_banner_image/default.jpg";
+                  }}
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                    objectFit: "contain",
+                    display: "block",
+                  }}
+                />
                 <input
-                  type="number"
-                  name="CostPrice"
-                  className="form-control"
-                  value={product.CostPrice}
+                  type="text"
+                  name="Image"
+                  className="form-control mt-2"
+                  placeholder="Nhập URL hình ảnh..."
+                  value={product.Image || ""}
                   onChange={handleChange}
-                  required
                 />
               </div>
-              <div className="col-md-6 mb-3">
-                <label className="form-label">Giá bán (VNĐ)</label>
-                <input
-                  type="number"
-                  name="SalePrice"
-                  className="form-control"
-                  value={product.SalePrice}
-                  onChange={handleChange}
-                  required
-                />
+
+              <div className="col-md-8">
+                <div className="row g-4">
+                  {/* Mã sản phẩm */}
+                  <div className="mb-3 col-md-6">
+                    <label className="form-label fw-semibold">
+                      Mã sản phẩm
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control bg-light"
+                      value={product.BarcodeProduct}
+                      readOnly
+                    />
+                  </div>
+
+                  {/* Tên sản phẩm */}
+                  <div className="mb-3 col-md-6">
+                    <label className="form-label fw-semibold">
+                      Tên sản phẩm
+                    </label>
+                    <input
+                      type="text"
+                      name="ProductName"
+                      className="form-control"
+                      value={product.ProductName}
+                      onChange={handleChange}
+                      required
+                    />
+                    {errors.ProductName && (
+                      <div className="text-danger mt-1">
+                        {errors.ProductName}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Danh mục & Thương hiệu */}
+                <div className="row">
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label fw-semibold">Danh mục</label>
+                    <input
+                      type="text"
+                      className="form-control bg-light"
+                      value={selectedCategory}
+                      readOnly
+                    />
+                  </div>
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label fw-semibold">
+                      Thương hiệu
+                    </label>
+                    <select
+                      name="BrandID"
+                      className="form-select"
+                      value={product.BrandID}
+                      onChange={handleChange}
+                    >
+                      {brands.map((b) => (
+                        <option key={b.BrandID} value={b.BrandID}>
+                          {b.BrandName}
+                        </option>
+                      ))}
+                    </select>
+                    {errors.BrandID && (
+                      <div className="text-danger mt-1">{errors.BrandID}</div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Mô tả */}
+                <div className="mb-3">
+                  <label className="form-label fw-semibold">Mô tả</label>
+                  <textarea
+                    name="Description"
+                    className="form-control"
+                    rows="3"
+                    value={product.Description || ""}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                {/* Giá */}
+                <div className="row">
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label fw-semibold">
+                      Giá nhập (VNĐ)
+                    </label>
+                    <input
+                      type="number"
+                      name="CostPrice"
+                      className="form-control"
+                      value={product.CostPrice}
+                      onChange={handleChange}
+                      required
+                    />
+                    {errors.CostPrice && (
+                      <div className="text-danger mt-1">{errors.CostPrice}</div>
+                    )}
+                  </div>
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label fw-semibold">
+                      Giá bán (VNĐ)
+                    </label>
+                    <input
+                      type="number"
+                      name="SalePrice"
+                      className="form-control"
+                      value={product.SalePrice}
+                      onChange={handleChange}
+                      required
+                    />
+                    {errors.SalePrice && (
+                      <div className="text-danger mt-1">{errors.SalePrice}</div>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Extra Info */}
-            {selectedCategory && (
+            {/* Biến thể (Variants) */}
+            {variants.length > 0 && (
               <div className="mt-4">
-                <h5 className="text-secondary mb-3">Thông tin chi tiết</h5>
-                <div className="row">
-                  {categoryFieldMap[selectedCategory]?.map((field) => (
-                    <div className="col-md-6 mb-3" key={field.label}>
-                      <label className="form-label">{field.label}</label>
-                      <input
-                        type={field.type}
-                        className="form-control"
-                        value={extraFields[field.label] || ""}
-                        onChange={(e) =>
-                          handleExtraFieldChange(field.label, e.target.value)
-                        }
-                      />
+                <h5 className="text-secondary fw-bold mb-3">
+                  ⚙️ Thông tin chi tiết
+                </h5>
+                {variants.map((variant, index) => (
+                  <div
+                    key={variant.VariantID || index}
+                    className="border rounded-3 p-3 mb-3 bg-light"
+                  >
+                    <div className="row g-2 align-items-end mb-2">
+                      {/* Tên thuộc tính */}
+                      <div className="col-md-3">
+                        <label className="form-label">Tên thuộc tính</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={variant.AttributeName}
+                          onChange={(e) =>
+                            handleVariantChange(
+                              index,
+                              "AttributeName",
+                              e.target.value
+                            )
+                          }
+                        />
+                        {errors[`variant_name_${index}`] && (
+                          <div className="text-danger mt-1">
+                            {errors[`variant_name_${index}`]}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Giá trị */}
+                      <div className="col-md-2">
+                        <label className="form-label">Giá trị</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={variant.Value}
+                          onChange={(e) =>
+                            handleVariantChange(index, "Value", e.target.value)
+                          }
+                        />
+                        {errors[`variant_value_${index}`] && (
+                          <div className="text-danger mt-1">
+                            {errors[`variant_value_${index}`]}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Đơn vị */}
+                      <div className="col-md-2">
+                        <label className="form-label">Đơn vị</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={variant.Unit || ""}
+                          onChange={(e) =>
+                            handleVariantChange(index, "Unit", e.target.value)
+                          }
+                        />
+                      </div>
+
+                      {/* Mô tả */}
+                      <div className="col-md-4">
+                        <label className="form-label">Mô tả</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={variant.Description || ""}
+                          onChange={(e) =>
+                            handleVariantChange(
+                              index,
+                              "Description",
+                              e.target.value
+                            )
+                          }
+                        />
+                      </div>
+
+                      {/* Nút xóa */}
+                      <div className="col-md-1 d-flex justify-content-center">
+                        <button
+                          type="button"
+                          className="btn btn-danger btn-sm"
+                          onClick={() => {
+                            const updated = [...variants];
+                            updated.splice(index, 1);
+                            setVariants(updated);
+                          }}
+                        >
+                          🗑️
+                        </button>
+                      </div>
                     </div>
-                  ))}
+                  </div>
+                ))}
+                <div className="mt-2 mb-4">
+                  <button
+                    type="button"
+                    className="btn btn-primary btn-sm"
+                    onClick={handleAddVariant}
+                  >
+                    ➕ Thêm thuộc tính
+                  </button>
                 </div>
               </div>
             )}
 
             <div className="mt-4 text-end">
               <button type="submit" className="btn btn-success px-4">
-                Lưu thay đổi
+                💾 Lưu thay đổi
               </button>
             </div>
           </form>

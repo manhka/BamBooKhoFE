@@ -3,10 +3,11 @@ import { API_ENDPOINTS } from "../constants/api";
 
 export const getProducts = async (filters = {}) => {
   try {
-    const { ProductName = "", BrandID = "", CategoryID = "" } = filters;
+    const { keyword = "", BrandID = "", CategoryID = "" } = filters;
 
     const params = {};
-    if (ProductName) params.ProductName = ProductName;
+    if (keyword) params.keyword = keyword;
+
     if (BrandID) params.BrandID = BrandID;
     if (CategoryID) params.CategoryID = CategoryID;
 
