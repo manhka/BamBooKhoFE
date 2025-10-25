@@ -14,6 +14,10 @@ export const API_ENDPOINTS = {
     DETAIL: (id) => `/categories/${id}`,
     SEARCH_BY_NAME: (name) =>
       `/categories/search/by-name?name=${encodeURIComponent(name)}`,
+    CREATE: "/categories",
+    UPDATE: (id) => `/categories/${id}`,
+    DELETE: (id) => `/categories/${id}`,
+    RESTORE: (id) => `/categories/${id}/restore`,
   },
 
   BRANDS: {
