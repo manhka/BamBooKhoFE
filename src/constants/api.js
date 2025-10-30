@@ -25,4 +25,15 @@ export const API_ENDPOINTS = {
     SEARCH_BY_NAME: (name) =>
       `/brands/search/by-name?name=${encodeURIComponent(name)}`,
   },
+  CUSTOMERS: {
+    SEARCH_BY_NAME: "/customers/search",
+  },
+  CUSTOMER_RETURN: {
+    WARRANTY: "/customer-return/warranty",
+    WARRANTY_BY_ID: (exportDetailId) =>
+      `/customer-return/warranty/${exportDetailId}`,
+    CREATE: "/customer-return/create",
+    LIST: "/customer-return/list",
+    DETAIL: (id) => `/customer-return/detail/${id}`,
+  },
 };

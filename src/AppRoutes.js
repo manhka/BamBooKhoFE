@@ -8,6 +8,10 @@ import ProductList from "./pages/ProductList";
 import AddProduct from "./pages/AddProduct";
 import UpdateProduct from "./pages/UpdateProduct";
 import ProductDetail from "./pages/ProductDetail";
+import CustomerRechange from "./pages/CustomerRechange";
+import ProductWarrantyCheck from "./pages/ProductWarrantyCheck";
+import CustomerReturn from "./pages/CustomerReturn";
+import CustomerReturnList from "./pages/CustomerReturnList";
 
 const AppRoutes = () => (
   <Routes>
@@ -20,6 +24,17 @@ const AppRoutes = () => (
       <Route path="products/add" element={<AddProduct />} />
       <Route path="products/update/:barcode" element={<UpdateProduct />} />
       <Route path="products/details/:barcode" element={<ProductDetail />} />
+      <Route path="customer-return/list" element={<CustomerReturnList />} />
+
+      <Route
+        path="customer-return/:exportDetailId"
+        element={<CustomerReturn />}
+      />
+
+      <Route
+        path="products/customer-rechange"
+        element={<ProductWarrantyCheck />}
+      />
     </Route>
   </Routes>
 );
