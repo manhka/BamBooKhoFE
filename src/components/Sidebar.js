@@ -9,6 +9,7 @@ import {
   ChevronDown,
   ShoppingCart,
   Layers,
+  Tag,
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -50,6 +51,15 @@ export default function Sidebar({ isOpen, onLogout }) {
       submenu: [
         { label: "Danh sách danh mục", path: "/categories" },
         { label: "Thêm danh mục", path: "/categories/add" },
+      ],
+    },
+    {
+      id: "brands",
+      label: "Thương hiệu",
+      icon: Tag,
+      submenu: [
+        { label: "Danh sách thương hiệu", path: "/brands" },
+        { label: "Thêm thương hiệu", path: "/brands/add" },
       ],
     },
     {
