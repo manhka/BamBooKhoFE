@@ -8,6 +8,7 @@ import {
   LogOut,
   ChevronDown,
   ShoppingCart,
+  Layers,
   LogIn,
   RefreshCcw,
 } from "lucide-react";
@@ -57,6 +58,15 @@ export default function Sidebar({ isOpen, onLogout }) {
           label: "Danh sách đổi trả hàng",
           path: "customer-return/list",
         },
+      ],
+    },
+    {
+      id: "categories",
+      label: "Danh mục",
+      icon: Layers,
+      submenu: [
+        { label: "Danh sách danh mục", path: "/categories" },
+        { label: "Thêm danh mục", path: "/categories/add" },
       ],
     },
     {

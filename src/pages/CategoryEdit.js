@@ -1,0 +1,154 @@
+import React, { useState, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import {
+  getCategoryById,
+  updateCategory,
+} from "../services/categoryService";
+import { useNavigate, useParams } from "react-router-dom";
+
+const CategoryEdit = () => {
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const [formData, setFormData] = useState({
+    CategoryName: "",
+    Description: "",
+  });
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
+
+  useEffect(() => {
+    fetchCategory();
+  }, [id]);
+
+  const fetchCategory = async () => {
+    try {
+      const result = await getCategoryById(id);
+      setFormData({
+        CategoryName: result.data.CategoryName || "",
+        Description: result.data.Description || "",
+      });
+    } catch (error) {
+      alert("Error loading category: " + error.message);
+      navigate("/categories");
+    } finally {
+      setFetching(false);
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    if (errors[name]) {
+      setErrors({ ...errors, [name]: "" });
+    }
+  };
+
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.CategoryName.trim()) {
+      newErrors.CategoryName = "Category name is required";
+    }
+    return newErrors;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await updateCategory(id, formData);
+      alert("Category updated successfully!");
+      navigate("/categories");
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "Error updating category";
+      alert(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (fetching) {
+    return (
+      <div className="container-fluid">
+        <div className="text-center mt-5">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-12">
+          <div className="card border-0 shadow-sm">
+            <div className="card-body p-4">
+              <h4 className="mb-4">Edit category</h4>
+
+              <form onSubmit={handleSubmit}>
+                <div className="mb-3">
+                  <label className="form-label">
+                    Category Name <span className="text-danger">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    className={`form-control ${
+                      errors.CategoryName ? "is-invalid" : ""
+                    }`}
+                    name="CategoryName"
+                    placeholder="Enter Category Name"
+                    value={formData.CategoryName}
+                    onChange={handleChange}
+                  />
+                  {errors.CategoryName && (
+                    <div className="invalid-feedback">{errors.CategoryName}</div>
+                  )}
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label">Description</label>
+                  <textarea
+                    className="form-control"
+                    name="Description"
+                    placeholder="Enter Description"
+                    rows="4"
+                    value={formData.Description}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                <div className="d-flex gap-2">
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    disabled={loading}
+                  >
+                    {loading ? "Updating..." : "Update category"}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary"
+                    onClick={() => navigate("/categories")}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CategoryEdit;
