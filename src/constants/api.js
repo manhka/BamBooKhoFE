@@ -8,6 +8,9 @@ export const API_ENDPOINTS = {
   PRODUCTS: {
     LIST: "/products",
     DETAIL: (barcode) => `/products/details/${barcode}`,
+    CREATE: "/products/create",
+    UPDATE: (barcode) => `/products/update/${barcode}`,
+    ARCHIVE: (barcode) => `/products/archive/${barcode}`,
   },
   CATEGORIES: {
     LIST: "/categories",
@@ -29,5 +32,16 @@ export const API_ENDPOINTS = {
     UPDATE: (id) => `/brands/${id}`,
     DELETE: (id) => `/brands/${id}`,
     RESTORE: (id) => `/brands/${id}/restore`,
+  },
+  CUSTOMERS: {
+    SEARCH_BY_NAME: "/customers/search",
+  },
+  CUSTOMER_RETURN: {
+    WARRANTY: "/customer-return/warranty",
+    WARRANTY_BY_ID: (exportDetailId) =>
+      `/customer-return/warranty/${exportDetailId}`,
+    CREATE: "/customer-return/create",
+    LIST: "/customer-return/list",
+    DETAIL: (id) => `/customer-return/detail/${id}`,
   },
 };
