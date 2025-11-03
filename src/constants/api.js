@@ -28,6 +28,10 @@ export const API_ENDPOINTS = {
     DETAIL: (id) => `/brands/${id}`,
     SEARCH_BY_NAME: (name) =>
       `/brands/search/by-name?name=${encodeURIComponent(name)}`,
+    CREATE: "/brands",
+    UPDATE: (id) => `/brands/${id}`,
+    DELETE: (id) => `/brands/${id}`,
+    RESTORE: (id) => `/brands/${id}/restore`,
   },
   CUSTOMERS: {
     SEARCH_BY_NAME: "/customers/search",
