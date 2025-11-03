@@ -9,6 +9,7 @@ import {
   ChevronDown,
   ShoppingCart,
   LogIn,
+  RefreshCcw,
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -41,6 +42,21 @@ export default function Sidebar({ isOpen, onLogout }) {
       submenu: [
         { label: "Danh sách sản phẩm", path: "products/list" },
         { label: "Thêm sản phẩm mới", path: "products/add" },
+      ],
+    },
+    {
+      id: "change-products",
+      label: "Đổi trả sản phẩm",
+      icon: RefreshCcw,
+      submenu: [
+        {
+          label: "Khách hàng đổi trả sản phẩm",
+          path: "products/customer-rechange",
+        },
+        {
+          label: "Danh sách đổi trả hàng",
+          path: "customer-return/list",
+        },
       ],
     },
     {
