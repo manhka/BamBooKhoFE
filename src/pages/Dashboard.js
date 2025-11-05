@@ -1,17 +1,13 @@
 "use client";
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Menu, X, Bell, UserCircle } from "lucide-react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Sidebar from "../components/Sidebar";
-
+import Chart from "../components/Chart";
+import Info from "../components/Info";
 export default function Dashboard() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
   const isAdmin = user && user.roleID === 1;
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-
   if (!isAdmin) {
     return (
       <div className="d-flex flex-column align-items-center justify-content-center vh-100 bg-light text-center">
@@ -28,14 +24,22 @@ export default function Dashboard() {
     );
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    navigate("/login");
-  };
-
   return (
-    <div className="d-flex vh-100 bg-light position-relative overflow-hidden">
-      <h1>Hello</h1>
+    <div className="d-flex vh-100 bg-light position-relative overflow-hidden p-3">
+      <div className="d-flex flex-column flex-grow-1 w-100 gap-3">
+        <div
+          className="h-50 overflow-auto bg-white rounded-4 shadow-sm border p-3"
+          style={{ borderColor: "#dee2e6" }}
+        >
+          <Info />
+        </div>
+        <div
+          className="h-50 overflow-hidden bg-white rounded-4 shadow-sm border p-3 d-flex flex-column"
+          style={{ borderColor: "#dee2e6" }}
+        >
+          <Chart />
+        </div>
+      </div>
     </div>
   );
 }
