@@ -24,7 +24,7 @@ export default function Sidebar({ isOpen, onLogout, onSelectPage }) {
       label: "Nhân Viên",
       icon: Users,
       submenu: [
-        { label: "Tất cả nhân viên", page: "staffList" },
+        { label: "Tất cả nhân viên", path: "/staffList" },
         { label: "Thêm nhân viên", path: "/register" },
       ],
     },
@@ -42,7 +42,15 @@ export default function Sidebar({ isOpen, onLogout, onSelectPage }) {
       label: "Hoạt động",
       icon: FileText,
       submenu: [
-        { label: "Danh sách hoạt động", page: "activityList" }
+        { label: "Danh sách hoạt động", path: "/activityList" }
+      ],
+    },
+    {
+      id: "statistics",
+      label: "Thống kế",
+      icon: BarChart3,
+      submenu: [
+        { label: "Bao cáo", path: "/report" },
       ],
     },
   ];

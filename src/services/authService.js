@@ -19,7 +19,7 @@ export const register = async (
       `${API_URL}/register`,
       { username, password, phone, roleId },
       {
-        headers: {
+        headers: {  
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
