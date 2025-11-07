@@ -1,4 +1,5 @@
-import axios from "axios";
+import api from "./api";
+import { API_ENDPOINTS } from "../constants/api";
 
 const API_URL = "http://localhost:3001/api/auth";
 

@@ -14,7 +14,7 @@ const LoginPage = () => {
       const res = await login(username, password);
       localStorage.setItem("token", res.token);
       localStorage.setItem("user", JSON.stringify(res.user));
-      navigate("/appLayout");
+      navigate("/dashboard");
     } catch (err) {
       setError(err.response?.data?.message || "Đăng nhập thất bại");
     }

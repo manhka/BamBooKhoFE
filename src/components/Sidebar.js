@@ -43,11 +43,10 @@ export default function Sidebar({ isOpen, onLogout, onSelectPage }) {
     {
       id: "activities",
       label: "Hoạt động",
-      icon: FileText,
-      submenu: [
-        { label: "Danh sách hoạt động", page: "activityList" }
-      ],
+      icon: RefreshCcw,
+      submenu: [{ label: "Danh sách hoạt động", page: "activityList" }],
     },
+    {
       id: "change-products",
       label: "Đổi trả sản phẩm",
       icon: RefreshCcw,
@@ -148,8 +147,7 @@ export default function Sidebar({ isOpen, onLogout, onSelectPage }) {
               {item.submenu &&
                 expandedMenu === item.id &&
                 item.submenu.map((sub, idx) => {
-                  const isSubActive =
-                    sub.path === currentPath || false; 
+                  const isSubActive = sub.path === currentPath || false;
                   return (
                     <button
                       key={idx}
