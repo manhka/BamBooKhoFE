@@ -21,6 +21,8 @@ import CustomerReturnList from "./pages/CustomerReturnList";
 
 const AppRoutes = () => (
   <Routes>
+    <Route path="/" element={<LoginPage />} />{" "}
+    <Route path="*" element={<LoginPage />} />{" "}
     <Route path="/" element={<AppLayout />}>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />

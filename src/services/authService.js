@@ -1,11 +1,6 @@
 import axios from "axios";
 
-import { API_BASE_URL, API_ENDPOINTS } from "../constants/api";
-
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: { "Content-Type": "application/json" },
-});
+const API_URL = "http://localhost:3001/api/auth";
 
 export const login = async (username, password) => {
   try {
@@ -24,7 +19,7 @@ export const register = async (
   username,
   password,
   phone,
-  roleId = 1,
+  roleId = 2,
   token
 ) => {
   try {

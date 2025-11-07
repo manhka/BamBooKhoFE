@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-export default function Sidebar({ isOpen, onLogout }) {
+export default function Sidebar({ isOpen, onLogout, onSelectPage }) {
   const [expandedMenu, setExpandedMenu] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,23 +23,17 @@ export default function Sidebar({ isOpen, onLogout }) {
 
   const menuItems = [
     {
-      id: "dashboard",
-      label: "Bảng Điều Khiển",
-      icon: BarChart3,
-      path: "/dashboard",
-    },
-    {
       id: "employees",
       label: "Nhân Viên",
       icon: Users,
       submenu: [
-        { label: "Tất cả nhân viên", path: "/employees" },
+        { label: "Tất cả nhân viên", page: "staffList" },
         { label: "Thêm nhân viên", path: "/register" },
       ],
     },
     {
       id: "products",
-      label: "Quản lý sản phẩm",
+      label: "Sản phẩm",
       icon: ShoppingCart,
       submenu: [
         { label: "Danh sách sản phẩm", path: "products/list" },
@@ -119,87 +113,66 @@ export default function Sidebar({ isOpen, onLogout }) {
 
         {/* Menu */}
         <ul className="nav flex-column" style={{ gap: "6px" }}>
-          {menuItems.map((item) => {
-            const isActive =
-              item.path === currentPath ||
-              (item.submenu &&
-                item.submenu.some((sub) => sub.path === currentPath));
+          {menuItems.map((item) => (
+            <li key={item.id} className="nav-item">
+              {/* --- Mục chính --- */}
+              <button
+                onClick={() =>
+                  setExpandedMenu(expandedMenu === item.id ? null : item.id)
+                }
+                className="nav-link d-flex align-items-center gap-2 py-2 px-3 rounded w-100 text-start border-0"
+                style={{
+                  color: "#334155",
+                  fontWeight: 500,
+                  transition: "all 0.2s ease",
+                }}
+              >
+                <item.icon size={18} />
+                <span>{item.label}</span>
+                <ChevronDown
+                  size={16}
+                  className={`ms-auto transition-transform ${
+                    expandedMenu === item.id ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
 
-            return (
-              <li key={item.id} className="nav-item">
-                <button
-                  onClick={() => {
-                    if (item.submenu) {
-                      setExpandedMenu(
-                        expandedMenu === item.id ? null : item.id
-                      );
-                    } else {
-                      navigate(item.path);
-                    }
-                  }}
-                  className="nav-link d-flex align-items-center gap-2 py-2 px-3 rounded w-100 text-start border-0"
-                  style={{
-                    color: "#334155",
-                    fontWeight: 500,
-                    transition: "all 0.2s ease",
-                    backgroundColor: isActive ? "#e2e8f0" : "transparent",
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isActive) e.currentTarget.style.background = "#f1f5f9";
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isActive)
-                      e.currentTarget.style.background = "transparent";
-                  }}
-                >
-                  <item.icon size={18} />
-                  <span style={{ color: isActive ? "#1e293b" : "#334155" }}>
-                    {item.label}
-                  </span>
-                  {item.submenu && (
-                    <ChevronDown
-                      size={16}
-                      className={`ms-auto transition-transform ${
-                        expandedMenu === item.id ? "rotate-180" : ""
-                      }`}
-                    />
-                  )}
-                </button>
-
-                {/* Submenu */}
-                {item.submenu &&
-                  expandedMenu === item.id &&
-                  item.submenu.map((sub, idx) => {
-                    const isSubActive = sub.path === currentPath;
-                    return (
-                      <button
-                        key={idx}
-                        onClick={() => navigate(sub.path)}
-                        className="btn w-100 text-start ps-5 py-1 small border-0"
-                        style={{
-                          color: isSubActive ? "#1e293b" : "#64748b",
-                          backgroundColor: isSubActive
-                            ? "#e2e8f0"
-                            : "transparent",
-                          textDecoration: "none",
-                          transition: "all 0.2s ease",
-                        }}
-                        onMouseEnter={(e) => {
-                          if (!isSubActive)
-                            e.currentTarget.style.background = "#f1f5f9";
-                        }}
-                        onMouseLeave={(e) => {
-                          if (!isSubActive)
-                            e.currentTarget.style.background = "transparent";
-                        }}
-                      >
-                        • {sub.label}
-                      </button>
-                    );
-                  })}
-              </li>
-            );
-          })}
+              {/* --- Submenu --- */}
+              {item.submenu &&
+                expandedMenu === item.id &&
+                item.submenu.map((sub, idx) => {
+                  const isSubActive =
+                    sub.path === currentPath || false; // check path active
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => {
+                        if (sub.path) navigate(sub.path);
+                        else if (sub.page) onSelectPage(sub.page);
+                      }}
+                      className="btn w-100 text-start ps-5 py-1 small border-0"
+                      style={{
+                        color: isSubActive ? "#1e293b" : "#64748b",
+                        backgroundColor: isSubActive
+                          ? "#e2e8f0"
+                          : "transparent",
+                        transition: "all 0.2s ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isSubActive)
+                          e.currentTarget.style.background = "#f1f5f9";
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isSubActive)
+                          e.currentTarget.style.background = "transparent";
+                      }}
+                    >
+                      • {sub.label}
+                    </button>
+                  );
+                })}
+            </li>
+          ))}
         </ul>
 
         {/* Logout */}
@@ -215,8 +188,6 @@ export default function Sidebar({ isOpen, onLogout }) {
             padding: "8px 12px",
             transition: "background 0.2s ease",
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = "#fecaca")}
-          onMouseLeave={(e) => (e.currentTarget.style.background = "#fee2e2")}
         >
           <LogOut size={18} />
           Đăng xuất
