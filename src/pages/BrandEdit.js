@@ -29,7 +29,7 @@ const BrandEdit = () => {
         Description: result.data.Description || "",
       });
     } catch (error) {
-      alert("Error loading brand: " + error.message);
+      alert("Lỗi khi tải thương hiệu: " + error.message);
       navigate("/brands");
     } finally {
       setFetching(false);
@@ -47,7 +47,7 @@ const BrandEdit = () => {
   const validate = () => {
     const newErrors = {};
     if (!formData.BrandName.trim()) {
-      newErrors.BrandName = "Brand name is required";
+      newErrors.BrandName = "Tên thương hiệu là bắt buộc";
     }
     return newErrors;
   };
@@ -63,11 +63,11 @@ const BrandEdit = () => {
     setLoading(true);
     try {
       await updateBrand(id, formData);
-      alert("Brand updated successfully!");
+      alert("Cập nhật thương hiệu thành công!");
       navigate("/brands");
     } catch (error) {
       const errorMessage =
-        error.response?.data?.message || "Error updating brand";
+        error.response?.data?.message || "Lỗi khi cập nhật thương hiệu";
       alert(errorMessage);
     } finally {
       setLoading(false);
@@ -79,7 +79,7 @@ const BrandEdit = () => {
       <div className="container-fluid">
         <div className="text-center mt-5">
           <div className="spinner-border" role="status">
-            <span className="visually-hidden">Loading...</span>
+            <span className="visually-hidden">Đang tải...</span>
           </div>
         </div>
       </div>
@@ -92,12 +92,12 @@ const BrandEdit = () => {
         <div className="col-12">
           <div className="card border-0 shadow-sm">
             <div className="card-body p-4">
-              <h4 className="mb-4">Edit brand</h4>
+              <h4 className="mb-4">Sửa thương hiệu</h4>
 
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                   <label className="form-label">
-                    Brand Name <span className="text-danger">*</span>
+                    Tên thương hiệu <span className="text-danger">*</span>
                   </label>
                   <input
                     type="text"
@@ -105,7 +105,7 @@ const BrandEdit = () => {
                       errors.BrandName ? "is-invalid" : ""
                     }`}
                     name="BrandName"
-                    placeholder="Enter Brand Name"
+                    placeholder="Nhập tên thương hiệu"
                     value={formData.BrandName}
                     onChange={handleChange}
                   />
@@ -115,11 +115,11 @@ const BrandEdit = () => {
                 </div>
 
                 <div className="mb-3">
-                  <label className="form-label">Description</label>
+                  <label className="form-label">Mô tả</label>
                   <textarea
                     className="form-control"
                     name="Description"
-                    placeholder="Enter Description"
+                    placeholder="Nhập mô tả"
                     rows="4"
                     value={formData.Description}
                     onChange={handleChange}
@@ -132,14 +132,14 @@ const BrandEdit = () => {
                     className="btn btn-primary"
                     disabled={loading}
                   >
-                    {loading ? "Updating..." : "Update brand"}
+                    {loading ? "Đang cập nhật..." : "Cập nhật thương hiệu"}
                   </button>
                   <button
                     type="button"
                     className="btn btn-outline-secondary"
                     onClick={() => navigate("/brands")}
                   >
-                    Cancel
+                    Hủy
                   </button>
                 </div>
               </form>

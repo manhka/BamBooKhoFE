@@ -29,7 +29,7 @@ const CategoryEdit = () => {
         Description: result.data.Description || "",
       });
     } catch (error) {
-      alert("Error loading category: " + error.message);
+      alert("Lỗi khi tải danh mục: " + error.message);
       navigate("/categories");
     } finally {
       setFetching(false);
@@ -47,7 +47,7 @@ const CategoryEdit = () => {
   const validate = () => {
     const newErrors = {};
     if (!formData.CategoryName.trim()) {
-      newErrors.CategoryName = "Category name is required";
+      newErrors.CategoryName = "Tên danh mục là bắt buộc";
     }
     return newErrors;
   };
@@ -63,11 +63,11 @@ const CategoryEdit = () => {
     setLoading(true);
     try {
       await updateCategory(id, formData);
-      alert("Category updated successfully!");
+      alert("Cập nhật danh mục thành công!");
       navigate("/categories");
     } catch (error) {
       const errorMessage =
-        error.response?.data?.message || "Error updating category";
+        error.response?.data?.message || "Lỗi khi cập nhật danh mục";
       alert(errorMessage);
     } finally {
       setLoading(false);
@@ -79,7 +79,7 @@ const CategoryEdit = () => {
       <div className="container-fluid">
         <div className="text-center mt-5">
           <div className="spinner-border" role="status">
-            <span className="visually-hidden">Loading...</span>
+            <span className="visually-hidden">Đang tải...</span>
           </div>
         </div>
       </div>
@@ -92,12 +92,12 @@ const CategoryEdit = () => {
         <div className="col-12">
           <div className="card border-0 shadow-sm">
             <div className="card-body p-4">
-              <h4 className="mb-4">Edit category</h4>
+              <h4 className="mb-4">Sửa danh mục</h4>
 
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                   <label className="form-label">
-                    Category Name <span className="text-danger">*</span>
+                    Tên danh mục <span className="text-danger">*</span>
                   </label>
                   <input
                     type="text"
@@ -105,7 +105,7 @@ const CategoryEdit = () => {
                       errors.CategoryName ? "is-invalid" : ""
                     }`}
                     name="CategoryName"
-                    placeholder="Enter Category Name"
+                    placeholder="Nhập tên danh mục"
                     value={formData.CategoryName}
                     onChange={handleChange}
                   />
@@ -115,11 +115,11 @@ const CategoryEdit = () => {
                 </div>
 
                 <div className="mb-3">
-                  <label className="form-label">Description</label>
+                  <label className="form-label">Mô tả</label>
                   <textarea
                     className="form-control"
                     name="Description"
-                    placeholder="Enter Description"
+                    placeholder="Nhập mô tả"
                     rows="4"
                     value={formData.Description}
                     onChange={handleChange}
@@ -132,14 +132,14 @@ const CategoryEdit = () => {
                     className="btn btn-primary"
                     disabled={loading}
                   >
-                    {loading ? "Updating..." : "Update category"}
+                    {loading ? "Đang cập nhật..." : "Cập nhật danh mục"}
                   </button>
                   <button
                     type="button"
                     className="btn btn-outline-secondary"
                     onClick={() => navigate("/categories")}
                   >
-                    Cancel
+                    Hủy
                   </button>
                 </div>
               </form>

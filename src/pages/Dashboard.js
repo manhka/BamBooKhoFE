@@ -35,7 +35,7 @@ export default function Dashboard() {
 
   return (
     <div className="d-flex vh-100 bg-light position-relative overflow-hidden">
-      <h1>Hello</h1>
+      <h1>Xin chào</h1>
     </div>
   );
 }

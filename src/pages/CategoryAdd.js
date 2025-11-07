@@ -23,7 +23,7 @@ const CategoryAdd = () => {
   const validate = () => {
     const newErrors = {};
     if (!formData.CategoryName.trim()) {
-      newErrors.CategoryName = "Category name is required";
+      newErrors.CategoryName = "Tên danh mục là bắt buộc";
     }
     return newErrors;
   };
@@ -39,11 +39,11 @@ const CategoryAdd = () => {
     setLoading(true);
     try {
       await createCategory(formData);
-      alert("Category created successfully!");
+      alert("Thêm danh mục thành công!");
       navigate("/categories");
     } catch (error) {
       const errorMessage =
-        error.response?.data?.message || "Error creating category";
+        error.response?.data?.message || "Lỗi khi thêm danh mục";
       alert(errorMessage);
     } finally {
       setLoading(false);
@@ -64,12 +64,12 @@ const CategoryAdd = () => {
         <div className="col-12">
           <div className="card border-0 shadow-sm">
             <div className="card-body p-4">
-              <h4 className="mb-4">Add category</h4>
+              <h4 className="mb-4">Thêm danh mục</h4>
 
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                   <label className="form-label">
-                    Category Name <span className="text-danger">*</span>
+                    Tên danh mục <span className="text-danger">*</span>
                   </label>
                   <input
                     type="text"
@@ -77,7 +77,7 @@ const CategoryAdd = () => {
                       errors.CategoryName ? "is-invalid" : ""
                     }`}
                     name="CategoryName"
-                    placeholder="Enter Category Name"
+                    placeholder="Nhập tên danh mục"
                     value={formData.CategoryName}
                     onChange={handleChange}
                   />
@@ -87,11 +87,11 @@ const CategoryAdd = () => {
                 </div>
 
                 <div className="mb-3">
-                  <label className="form-label">Description</label>
+                  <label className="form-label">Mô tả</label>
                   <textarea
                     className="form-control"
                     name="Description"
-                    placeholder="Enter Description"
+                    placeholder="Nhập mô tả"
                     rows="4"
                     value={formData.Description}
                     onChange={handleChange}
@@ -104,21 +104,21 @@ const CategoryAdd = () => {
                     className="btn btn-primary"
                     disabled={loading}
                   >
-                    {loading ? "Adding..." : "Add category"}
+                    {loading ? "Đang thêm..." : "Thêm danh mục"}
                   </button>
                   <button
                     type="button"
                     className="btn btn-secondary"
                     onClick={handleReset}
                   >
-                    Reset
+                    Đặt lại
                   </button>
                   <button
                     type="button"
                     className="btn btn-outline-secondary"
                     onClick={() => navigate("/categories")}
                   >
-                    Cancel
+                    Hủy
                   </button>
                 </div>
               </form>

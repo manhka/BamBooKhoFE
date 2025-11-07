@@ -219,7 +219,7 @@ export default function Sidebar({ isOpen, onLogout }) {
           onMouseLeave={(e) => (e.currentTarget.style.background = "#fee2e2")}
         >
           <LogOut size={18} />
-          Logout
+          Đăng xuất
         </button>
       </div>
     </aside>

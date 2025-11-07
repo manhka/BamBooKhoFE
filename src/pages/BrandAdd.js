@@ -23,7 +23,7 @@ const BrandAdd = () => {
   const validate = () => {
     const newErrors = {};
     if (!formData.BrandName.trim()) {
-      newErrors.BrandName = "Brand name is required";
+      newErrors.BrandName = "Tên thương hiệu là bắt buộc";
     }
     return newErrors;
   };
@@ -39,11 +39,11 @@ const BrandAdd = () => {
     setLoading(true);
     try {
       await createBrand(formData);
-      alert("Brand created successfully!");
+      alert("Thêm thương hiệu thành công!");
       navigate("/brands");
     } catch (error) {
       const errorMessage =
-        error.response?.data?.message || "Error creating brand";
+        error.response?.data?.message || "Lỗi khi thêm thương hiệu";
       alert(errorMessage);
     } finally {
       setLoading(false);
@@ -64,12 +64,12 @@ const BrandAdd = () => {
         <div className="col-12">
           <div className="card border-0 shadow-sm">
             <div className="card-body p-4">
-              <h4 className="mb-4">Add brand</h4>
+              <h4 className="mb-4">Thêm thương hiệu</h4>
 
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                   <label className="form-label">
-                    Brand Name <span className="text-danger">*</span>
+                    Tên thương hiệu <span className="text-danger">*</span>
                   </label>
                   <input
                     type="text"
@@ -77,7 +77,7 @@ const BrandAdd = () => {
                       errors.BrandName ? "is-invalid" : ""
                     }`}
                     name="BrandName"
-                    placeholder="Enter Brand Name"
+                    placeholder="Nhập tên thương hiệu"
                     value={formData.BrandName}
                     onChange={handleChange}
                   />
@@ -87,11 +87,11 @@ const BrandAdd = () => {
                 </div>
 
                 <div className="mb-3">
-                  <label className="form-label">Description</label>
+                  <label className="form-label">Mô tả</label>
                   <textarea
                     className="form-control"
                     name="Description"
-                    placeholder="Enter Description"
+                    placeholder="Nhập mô tả"
                     rows="4"
                     value={formData.Description}
                     onChange={handleChange}
@@ -104,21 +104,21 @@ const BrandAdd = () => {
                     className="btn btn-primary"
                     disabled={loading}
                   >
-                    {loading ? "Adding..." : "Add brand"}
+                    {loading ? "Đang thêm..." : "Thêm thương hiệu"}
                   </button>
                   <button
                     type="button"
                     className="btn btn-secondary"
                     onClick={handleReset}
                   >
-                    Reset
+                    Đặt lại
                   </button>
                   <button
                     type="button"
                     className="btn btn-outline-secondary"
                     onClick={() => navigate("/brands")}
                   >
-                    Cancel
+                    Hủy
                   </button>
                 </div>
               </form>
