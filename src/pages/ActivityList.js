@@ -83,9 +83,8 @@ export default function ActivityPage() {
 
   return (
     <div className="p-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2 className="m-0">Hoạt động</h2>
-
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="fw-bold mt-3">Hoạt động</h2>
         <div className="d-flex align-items-center gap-2">
           <div className="input-group" style={{ width: "250px" }}>
             <input

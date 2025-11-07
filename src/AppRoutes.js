@@ -1,9 +1,12 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import AppLayout from "./layouts/AppLayout";
+import AppLayout from "./layouts/AppLayout"; 
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import Dashboard from "./pages/Dashboard";
+import Report from "./pages/Report";
+import Activity from "./pages/ActivityList";
+import StaffList from "./pages/staffList";
 import ProductList from "./pages/ProductList";
 import CategoryList from "./pages/CategoryList";
 import CategoryAdd from "./pages/CategoryAdd";
@@ -40,12 +43,12 @@ const AppRoutes = () => (
       <Route path="products/update/:barcode" element={<UpdateProduct />} />
       <Route path="products/details/:barcode" element={<ProductDetail />} />
       <Route path="customer-return/list" element={<CustomerReturnList />} />
-
-      <Route
-        path="customer-return/:exportDetailId"
+      <Route path="customer-return/:exportDetailId"
         element={<CustomerReturn />}
+      <Route path="/report" element={<Report />} />
+      <Route path="/staffList" element={<StaffList />} />
+      <Route path="/activityList" element={<Activity />} />
       />
-
       <Route
         path="products/customer-rechange"
         element={<ProductWarrantyCheck />}
