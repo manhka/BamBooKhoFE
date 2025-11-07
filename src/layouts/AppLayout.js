@@ -1,10 +1,34 @@
 import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
-import { Outlet } from "react-router-dom";
+import StaffList from "../components/staffList";
+import ActivityPage from "../components/ActivityList";
+import { Outlet, useNavigate } from "react-router-dom";
 import { Menu } from "lucide-react";
 
 export default function AppLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [currentPage, setCurrentPage] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
+  const handleSelectPage = (page) => {
+    setCurrentPage(page);
+  };
+
+  const renderPage = () => {
+    switch (currentPage) {
+      case "staffList":
+        return <StaffList />;
+      case "activityList":
+        return <ActivityPage />;
+      default:
+        return <Outlet />;
+    }
+  };
 
   return (
     <div className="d-flex" style={{ minHeight: "100vh", overflow: "hidden" }}>
@@ -37,6 +61,7 @@ export default function AppLayout() {
           >
             <Menu size={20} />
           </button>
+          <h5 className="mb-0 text-secondary">Hệ thống quản lý</h5>
         </div>
 
         {/* ===== Nội dung chính ===== */}
