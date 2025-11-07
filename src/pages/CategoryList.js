@@ -120,13 +120,12 @@ const CategoryList = () => {
       >
         <div className="d-flex justify-content-between align-items-center mb-3">
           <div>
-            <h3 className="m-0">Category List</h3>
+            <h3 className="m-0">Danh sách danh mục</h3>
             <p className="text-muted mb-0" style={{ fontSize: "0.9rem" }}>
-              Use category list to describe your overall core business from the
-              provided list.
+              Quản lý danh sách danh mục sản phẩm của bạn.
               {selectedItems.length > 0 && (
                 <span className="badge bg-primary ms-2">
-                  {selectedItems.length} selected
+                  {selectedItems.length} đã chọn
                 </span>
               )}
             </p>
@@ -135,7 +134,7 @@ const CategoryList = () => {
             className="btn btn-primary"
             onClick={() => navigate("/categories/add")}
           >
-            + Add Category
+            + Thêm danh mục
           </button>
         </div>
 
@@ -144,7 +143,7 @@ const CategoryList = () => {
             <input
               type="text"
               className="form-control"
-              placeholder="🔍 Search here..."
+              placeholder="🔍 Tìm kiếm..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -155,8 +154,8 @@ const CategoryList = () => {
               value={showArchived}
               onChange={(e) => setShowArchived(e.target.value === "true")}
             >
-              <option value="false">Active Categories</option>
-              <option value="true">Archived Categories</option>
+              <option value="false">Danh mục đang hoạt động</option>
+              <option value="true">Danh mục đã lưu trữ</option>
             </select>
           </div>
         </div>
@@ -178,9 +177,9 @@ const CategoryList = () => {
             background: "#f8f9fa",
           }}
         >
-          <h5 className="mb-1 fw-semibold">Categories</h5>
+          <h5 className="mb-1 fw-semibold">Danh mục</h5>
           <p className="text-muted mb-0" style={{ fontSize: "0.9rem" }}>
-            Manage your product categories. Click on a category name to view details.
+            Quản lý danh mục sản phẩm. Nhấp vào tên danh mục để xem chi tiết.
           </p>
         </div>
 
@@ -209,10 +208,10 @@ const CategoryList = () => {
                   onChange={handleSelectAll}
                 />
               </th>
-              <th style={{ minWidth: "250px" }}>Category Name</th>
-              <th style={{ width: "120px", textAlign: "center" }}>Code</th>
-              <th style={{ width: "150px", textAlign: "center" }}>Status</th>
-              <th style={{ width: "150px", textAlign: "center" }}>Action</th>
+              <th style={{ minWidth: "250px" }}>Tên danh mục</th>
+              <th style={{ width: "120px", textAlign: "center" }}>Mã</th>
+              <th style={{ width: "150px", textAlign: "center" }}>Trạng thái</th>
+              <th style={{ width: "150px", textAlign: "center" }}>Hành động</th>
             </tr>
           </thead>
           <tbody>
@@ -233,22 +232,10 @@ const CategoryList = () => {
                     />
                   </td>
                   <td style={{ verticalAlign: "middle" }}>
-                    <div className="d-flex align-items-center">
-                      <div
-                        className="bg-light rounded d-flex align-items-center justify-content-center"
-                        style={{
-                          width: "50px",
-                          height: "50px",
-                          fontSize: "1.3rem",
-                        }}
-                      >
-                        📦
-                      </div>
-                      <div className="ms-3">
-                        <div className="fw-semibold">{cat.CategoryName}</div>
-                        <div className="text-muted" style={{ fontSize: "0.85rem" }}>
-                          {cat.Description || "No description"}
-                        </div>
+                    <div>
+                      <div className="fw-semibold">{cat.CategoryName}</div>
+                      <div className="text-muted" style={{ fontSize: "0.85rem" }}>
+                        {cat.Description || "Không có mô tả"}
                       </div>
                     </div>
                   </td>
@@ -263,26 +250,17 @@ const CategoryList = () => {
                         cat.IsArchive ? "bg-danger" : "bg-success"
                       }`}
                     >
-                      {cat.IsArchive ? "Archived" : "Active"}
+                      {cat.IsArchive ? "Đã lưu trữ" : "Hoạt động"}
                     </span>
                   </td>
                   <td style={{ textAlign: "center", verticalAlign: "middle" }}>
                     <div className="d-flex gap-1 justify-content-center">
                       <button
-                        className="btn btn-sm btn-info"
-                        onClick={() =>
-                          navigate(`/categories/view/${cat.CategoryID}`)
-                        }
-                        title="View"
-                      >
-                        <FaEye />
-                      </button>
-                      <button
                         className="btn btn-sm btn-success"
                         onClick={() =>
                           navigate(`/categories/edit/${cat.CategoryID}`)
                         }
-                        title="Edit"
+                        title="Sửa"
                       >
                         <FaEdit />
                       </button>
@@ -290,7 +268,7 @@ const CategoryList = () => {
                         <button
                           className="btn btn-sm btn-warning"
                           onClick={() => handleRestore(cat.CategoryID)}
-                          title="Restore"
+                          title="Khôi phục"
                         >
                           <FaUndo />
                         </button>
@@ -298,7 +276,7 @@ const CategoryList = () => {
                         <button
                           className="btn btn-sm btn-danger"
                           onClick={() => handleDelete(cat.CategoryID)}
-                          title="Delete"
+                          title="Xóa"
                         >
                           <FaTrash />
                         </button>
@@ -326,17 +304,17 @@ const CategoryList = () => {
             onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
             disabled={currentPage === 1}
           >
-            ← Previous
+            ← Trước
           </button>
           <span>
-            Page {currentPage}/{totalPages}
+            Trang {currentPage}/{totalPages}
           </span>
           <button
             className="btn btn-outline-secondary btn-sm"
             onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
             disabled={currentPage === totalPages}
           >
-            Next →
+            Tiếp →
           </button>
         </div>
       )}

@@ -120,13 +120,12 @@ const BrandList = () => {
       >
         <div className="d-flex justify-content-between align-items-center mb-3">
           <div>
-            <h3 className="m-0">Brand List</h3>
+            <h3 className="m-0">Danh sách thương hiệu</h3>
             <p className="text-muted mb-0" style={{ fontSize: "0.9rem" }}>
-              Use brand list to describe your overall core business from the
-              provided list.
+              Quản lý danh sách thương hiệu sản phẩm của bạn.
               {selectedItems.length > 0 && (
                 <span className="badge bg-primary ms-2">
-                  {selectedItems.length} selected
+                  {selectedItems.length} đã chọn
                 </span>
               )}
             </p>
@@ -135,7 +134,7 @@ const BrandList = () => {
             className="btn btn-primary"
             onClick={() => navigate("/brands/add")}
           >
-            + Add Brand
+            + Thêm thương hiệu
           </button>
         </div>
 
@@ -144,7 +143,7 @@ const BrandList = () => {
             <input
               type="text"
               className="form-control"
-              placeholder="🔍 Search here..."
+              placeholder="🔍 Tìm kiếm..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -155,8 +154,8 @@ const BrandList = () => {
               value={showArchived}
               onChange={(e) => setShowArchived(e.target.value === "true")}
             >
-              <option value="false">Active Brands</option>
-              <option value="true">Archived Brands</option>
+              <option value="false">Thương hiệu đang hoạt động</option>
+              <option value="true">Thương hiệu đã lưu trữ</option>
             </select>
           </div>
         </div>
@@ -178,9 +177,9 @@ const BrandList = () => {
             background: "#f8f9fa",
           }}
         >
-          <h5 className="mb-1 fw-semibold">Brands</h5>
+          <h5 className="mb-1 fw-semibold">Thương hiệu</h5>
           <p className="text-muted mb-0" style={{ fontSize: "0.9rem" }}>
-            Manage your product brands. Click on a brand name to view details.
+            Quản lý thương hiệu sản phẩm. Nhấp vào tên thương hiệu để xem chi tiết.
           </p>
         </div>
 
@@ -209,10 +208,10 @@ const BrandList = () => {
                   onChange={handleSelectAll}
                 />
               </th>
-              <th style={{ minWidth: "250px" }}>Brand Name</th>
-              <th style={{ width: "120px", textAlign: "center" }}>Code</th>
-              <th style={{ width: "150px", textAlign: "center" }}>Status</th>
-              <th style={{ width: "150px", textAlign: "center" }}>Action</th>
+              <th style={{ minWidth: "250px" }}>Tên thương hiệu</th>
+              <th style={{ width: "120px", textAlign: "center" }}>Mã</th>
+              <th style={{ width: "150px", textAlign: "center" }}>Trạng thái</th>
+              <th style={{ width: "150px", textAlign: "center" }}>Hành động</th>
             </tr>
           </thead>
           <tbody>
@@ -234,20 +233,10 @@ const BrandList = () => {
                   </td>
                   <td style={{ verticalAlign: "middle" }}>
                     <div className="d-flex align-items-center">
-                      <div
-                        className="bg-light rounded d-flex align-items-center justify-content-center"
-                        style={{
-                          width: "50px",
-                          height: "50px",
-                          fontSize: "1.3rem",
-                        }}
-                      >
-                        🏷️
-                      </div>
-                      <div className="ms-3">
+                      <div>
                         <div className="fw-semibold">{brand.BrandName}</div>
                         <div className="text-muted" style={{ fontSize: "0.85rem" }}>
-                          {brand.Description || "No description"}
+                          {brand.Description || "Không có mô tả"}
                         </div>
                       </div>
                     </div>
@@ -263,26 +252,17 @@ const BrandList = () => {
                         brand.IsArchive ? "bg-danger" : "bg-success"
                       }`}
                     >
-                      {brand.IsArchive ? "Archived" : "Active"}
+                      {brand.IsArchive ? "Đã lưu trữ" : "Hoạt động"}
                     </span>
                   </td>
                   <td style={{ textAlign: "center", verticalAlign: "middle" }}>
                     <div className="d-flex gap-1 justify-content-center">
                       <button
-                        className="btn btn-sm btn-info"
-                        onClick={() =>
-                          navigate(`/brands/view/${brand.BrandID}`)
-                        }
-                        title="View"
-                      >
-                        <FaEye />
-                      </button>
-                      <button
                         className="btn btn-sm btn-success"
                         onClick={() =>
                           navigate(`/brands/edit/${brand.BrandID}`)
                         }
-                        title="Edit"
+                        title="Sửa"
                       >
                         <FaEdit />
                       </button>
@@ -290,7 +270,7 @@ const BrandList = () => {
                         <button
                           className="btn btn-sm btn-warning"
                           onClick={() => handleRestore(brand.BrandID)}
-                          title="Restore"
+                          title="Khôi phục"
                         >
                           <FaUndo />
                         </button>
@@ -298,7 +278,7 @@ const BrandList = () => {
                         <button
                           className="btn btn-sm btn-danger"
                           onClick={() => handleDelete(brand.BrandID)}
-                          title="Delete"
+                          title="Xóa"
                         >
                           <FaTrash />
                         </button>
@@ -326,17 +306,17 @@ const BrandList = () => {
             onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
             disabled={currentPage === 1}
           >
-            ← Previous
+            ← Trước
           </button>
           <span>
-            Page {currentPage}/{totalPages}
+            Trang {currentPage}/{totalPages}
           </span>
           <button
             className="btn btn-outline-secondary btn-sm"
             onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
             disabled={currentPage === totalPages}
           >
-            Next →
+            Tiếp →
           </button>
         </div>
       )}
