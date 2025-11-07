@@ -1,6 +1,47 @@
-export const API_AUTH_URL = "http://localhost:3001/api";
+export const API_BASE_URL = "http://localhost:3000/api";
 
-export const API_URL = {
-  LOGIN: `${API_AUTH_URL}/auth/login`,
-  REGISTER: `${API_AUTH_URL}/auth/register`,
+export const API_ENDPOINTS = {
+  AUTH: {
+    LOGIN: "/auth/login",
+    REGISTER: "/auth/register",
+  },
+  PRODUCTS: {
+    LIST: "/products",
+    DETAIL: (barcode) => `/products/details/${barcode}`,
+    CREATE: "/products/create",
+    UPDATE: (barcode) => `/products/update/${barcode}`,
+    ARCHIVE: (barcode) => `/products/archive/${barcode}`,
+  },
+  CATEGORIES: {
+    LIST: "/categories",
+    DETAIL: (id) => `/categories/${id}`,
+    SEARCH_BY_NAME: (name) =>
+      `/categories/search/by-name?name=${encodeURIComponent(name)}`,
+    CREATE: "/categories",
+    UPDATE: (id) => `/categories/${id}`,
+    DELETE: (id) => `/categories/${id}`,
+    RESTORE: (id) => `/categories/${id}/restore`,
+  },
+
+  BRANDS: {
+    LIST: "/brands",
+    DETAIL: (id) => `/brands/${id}`,
+    SEARCH_BY_NAME: (name) =>
+      `/brands/search/by-name?name=${encodeURIComponent(name)}`,
+    CREATE: "/brands",
+    UPDATE: (id) => `/brands/${id}`,
+    DELETE: (id) => `/brands/${id}`,
+    RESTORE: (id) => `/brands/${id}/restore`,
+  },
+  CUSTOMERS: {
+    SEARCH_BY_NAME: "/customers/search",
+  },
+  CUSTOMER_RETURN: {
+    WARRANTY: "/customer-return/warranty",
+    WARRANTY_BY_ID: (exportDetailId) =>
+      `/customer-return/warranty/${exportDetailId}`,
+    CREATE: "/customer-return/create",
+    LIST: "/customer-return/list",
+    DETAIL: (id) => `/customer-return/detail/${id}`,
+  },
 };

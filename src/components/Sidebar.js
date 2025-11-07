@@ -5,10 +5,13 @@ import {
   Users,
   Settings,
   BarChart3,
-  FileText,
   LogOut,
   ChevronDown,
   ShoppingCart,
+  Layers,
+  Tag,
+  LogIn,
+  RefreshCcw,
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -33,9 +36,48 @@ export default function Sidebar({ isOpen, onLogout, onSelectPage }) {
       label: "Sản phẩm",
       icon: ShoppingCart,
       submenu: [
-        { label: "Danh sách sản phẩm", path: "/appLayout/products" },
-        { label: "Thêm sản phẩm", path: "/appLayout/add-product" },
+        { label: "Danh sách sản phẩm", path: "products/list" },
+        { label: "Thêm sản phẩm mới", path: "products/add" },
       ],
+    },
+    {
+      id: "change-products",
+      label: "Đổi trả sản phẩm",
+      icon: RefreshCcw,
+      submenu: [
+        {
+          label: "Khách hàng đổi trả sản phẩm",
+          path: "products/customer-rechange",
+        },
+        {
+          label: "Danh sách đổi trả hàng",
+          path: "customer-return/list",
+        },
+      ],
+    },
+    {
+      id: "categories",
+      label: "Danh mục",
+      icon: Layers,
+      submenu: [
+        { label: "Danh sách danh mục", path: "/categories" },
+        { label: "Thêm danh mục", path: "/categories/add" },
+      ],
+    },
+    {
+      id: "brands",
+      label: "Thương hiệu",
+      icon: Tag,
+      submenu: [
+        { label: "Danh sách thương hiệu", path: "/brands" },
+        { label: "Thêm thương hiệu", path: "/brands/add" },
+      ],
+    },
+    {
+      id: "settings",
+      label: "Cài đặt",
+      icon: Settings,
+      path: "/settings",
     },
   ];
 
@@ -47,8 +89,10 @@ export default function Sidebar({ isOpen, onLogout, onSelectPage }) {
         background: "linear-gradient(180deg, #ffffff, #f8fafc)",
         borderRight: "1px solid #e2e8f0",
         transform: isOpen ? "translateX(0)" : "translateX(-100%)",
-        transition: "transform 0.35s ease",
-        zIndex: 1040,
+        transition: "transform 0.35s ease, opacity 0.3s ease",
+        opacity: isOpen ? 1 : 0,
+        zIndex: 1100,
+        overflowY: "auto",
       }}
     >
       <div className="d-flex flex-column justify-content-between h-100 p-3">
@@ -146,7 +190,7 @@ export default function Sidebar({ isOpen, onLogout, onSelectPage }) {
           }}
         >
           <LogOut size={18} />
-          Logout
+          Đăng xuất
         </button>
       </div>
     </aside>
