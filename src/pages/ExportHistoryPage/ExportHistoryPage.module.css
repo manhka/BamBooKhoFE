@@ -1,0 +1,331 @@
+:root {
+  --color-primary: #007bff;
+  --color-primary-hover: #0056b3;
+  --color-success: #198754;
+  --color-danger: #dc3545;
+  --color-text: #212529;
+  --color-border: #dee2e6;
+  --color-background: #ffffff;
+  --color-background-alt: #f8f9fa;
+  --color-shadow: rgba(0, 0, 0, 0.075);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  margin-top: 5rem !important; 
+}
+
+.pageTitle {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--color-text);
+}
+
+.card {
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem; /* 8px */
+  margin-bottom: 1.5rem;
+  box-shadow: 0 0.125rem 0.25rem var(--color-shadow);
+  overflow: hidden;
+}
+
+.cardHeader {
+  padding: 1rem 1.25rem;
+  background-color: var(--color-background-alt);
+  border-bottom: 1px solid var(--color-border);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.cardBody {
+  padding: 1.25rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-content: flex-start; 
+}
+
+.formLabel {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.formInput {
+  display: block;
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  font-size: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.formInput:focus {
+  border-color: var(--color-primary);
+  outline: 0;
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.15);
+}
+
+.datePickerWrapper {
+  width: 100%;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.1rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  text-decoration: none;
+  gap: 0.5rem;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.buttonSecondary {
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ccc;
+}
+.buttonSecondary:hover:not(:disabled) {
+  background-color: #e0e0e0;
+}
+
+.buttonOutline {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: white;
+  padding: 0.3rem 0.6rem;
+}
+.buttonOutline:hover:not(:disabled) {
+  background: #f0f7ff;
+}
+
+.alert {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+  color: #b42b1b;
+  background-color: #fdeeee;
+  border-color: #f5c2c7;
+}
+
+.spinner {
+  display: inline-block;
+  width: 1.1rem;
+  height: 1.1rem;
+  vertical-align: text-bottom;
+  border: 0.2em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spinner-border 0.75s linear infinite;
+}
+@keyframes spinner-border {
+  to { transform: rotate(360deg); }
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 0.125rem 0.25rem var(--color-shadow);
+}
+
+.table {
+  width: 100%;
+  min-width: 900px; 
+  border-collapse: collapse;
+  font-size: 1rem;
+}
+
+.table th,
+.table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+  vertical-align: top; 
+}
+
+.table tbody tr:hover {
+  background-color: #fcfcfc;
+}
+
+.iconFix {
+  position: relative;
+  top: -1px;
+  margin-right: 0.25rem;
+}
+
+.filterGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); 
+  gap: 1.25rem;
+}
+
+.filterActions {
+  grid-column: 1 / -1; 
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+@media (max-width: 992px) {
+  .filterGrid {
+    grid-template-columns: repeat(2, 1fr); 
+  }
+  .filterActions {
+    grid-column: span 2; 
+  }
+}
+@media (max-width: 576px) {
+  .filterGrid {
+    grid-template-columns: 1fr;
+  }
+  .filterActions {
+    grid-column: span 1;
+  }
+}
+
+.toolbar {
+  display: flex;
+  justify-content: flex-start; 
+  margin-bottom: 1rem; 
+}
+
+.sortContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sortLabel {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.sortSelect {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background-color: var(--color-background);
+}
+
+.tableHeader {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.tableHeader th {
+  background-color: var(--color-background-alt);
+  font-weight: 600;
+  white-space: nowrap;
+  vertical-align: top;
+}
+
+.loadingRow,
+.emptyRow {
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+  padding: 2rem;
+}
+
+.loadingRow {
+  font-style: normal;
+  font-weight: 500;
+}
+
+.productDetailItem {
+  font-size: 1em;
+  white-space: nowrap;
+  margin-bottom: 0.25rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.3em 0.5em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  color: #fff;
+  background-color: #6c757d; 
+  border-radius: 0.25rem;
+  margin-left: 0.5rem;
+}
+
+.paginationContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.pagination {
+  display: flex;
+  padding-left: 0;
+  list-style: none;
+}
+
+.pageLink {
+  position: relative;
+  display: block;
+  padding: 0.5rem 0.75rem;
+  margin-left: -1px;
+  line-height: 1.25;
+  color: var(--color-primary);
+  background-color: #fff;
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.15s ease-in-out;
+}
+.pageLink:hover {
+  background-color: #e9ecef;
+}
+
+.pageItem:first-child .pageLink {
+  margin-left: 0;
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+.pageItem:last-child .pageLink {
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+
+.pageItem.active .pageLink {
+  z-index: 3;
+  color: #fff;
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.pageItem.disabled .pageLink {
+  color: #6c757d;
+  pointer-events: none;
+  background-color: #fff;
+  border-color: var(--color-border);
+}

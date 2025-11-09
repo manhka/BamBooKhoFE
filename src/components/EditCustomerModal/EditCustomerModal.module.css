@@ -1,0 +1,11 @@
+@import "../AddCustomerModal/AddCustomerModal.module.css";
+
+.loadingContainer {
+  padding: 3rem 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.1rem;
+  color: #555;
+}

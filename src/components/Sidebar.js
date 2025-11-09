@@ -8,6 +8,9 @@ import {
   LogOut,
   ChevronDown,
   ShoppingCart,
+  ArrowDownSquare, 
+  ArrowUpSquare,
+  History
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -48,7 +51,30 @@ export default function Sidebar({ isOpen, onLogout }) {
       icon: Settings,
       path: "/settings",
     },
+
+    {
+      id: "import", 
+      label: "Nhập Kho",
+      icon: ArrowDownSquare, 
+      submenu: [
+        { label: "Nhập từ Excel", path: "/import-upload" }, 
+        { label: "Lịch sử nhập", path: "/import-history" }, 
+      ],
+    },
+
+    {
+      id: "export",
+      label: "Xuất Kho",
+      icon: ArrowUpSquare,
+      submenu: [
+        { label: "Tạo Phiếu Xuất", path: "/export-create" },
+        { label: "Lịch Sử Xuất", path: "/export-history" },
+      ],
+    },
+
   ];
+
+  
 
   return (
     <aside

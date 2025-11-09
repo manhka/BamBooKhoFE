@@ -22,4 +22,34 @@ export const API_ENDPOINTS = {
     SEARCH_BY_NAME: (name) =>
       `/brands/search/by-name?name=${encodeURIComponent(name)}`,
   },
-};
+
+  IMPORT: {
+    UPLOAD: "/import-orders/upload",
+    LIST: "/import-orders",
+    DETAIL: (id) => `/import-orders/${id}`,
+  },
+
+  SUPPLIERS: {
+    LIST: "/suppliers",
+    
+  },
+
+  USERS: {
+    LIST: "/users", 
+  },
+
+  EXPORT: {
+    CREATE: "/export-orders",       
+    LIST: "/export-orders",       
+    DETAIL: (id) => `/export-orders/${id}`, 
+    DOWNLOAD_EXCEL: (id) => `/export-orders/${id}/excel`,
+  },
+
+  CUSTOMERS: {
+    LIST: "/customers", 
+    CREATE: "/customers",
+    DETAIL: '/customers/detail/:id', 
+    UPDATE: '/customers/update/:id',
+  }
+
+}
