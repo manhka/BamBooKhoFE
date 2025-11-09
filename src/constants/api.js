@@ -8,6 +8,7 @@ export const API_ENDPOINTS = {
   PRODUCTS: {
     LIST: "/products",
     DETAIL: (barcode) => `/products/details/${barcode}`,
+    ALL_FOR_LOOKUP: '/products/all-for-lookup',
   },
   CATEGORIES: {
     LIST: "/categories",
@@ -31,7 +32,6 @@ export const API_ENDPOINTS = {
 
   SUPPLIERS: {
     LIST: "/suppliers",
-    
   },
 
   USERS: {

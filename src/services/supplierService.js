@@ -6,10 +6,10 @@ import { API_ENDPOINTS } from "../constants/api";
  */
 export const getAllSuppliers = async () => {
   try {
-    const token = localStorage.getItem("token"); // Giả sử cần token
+    const token = localStorage.getItem("token");
     const response = await api.get(API_ENDPOINTS.SUPPLIERS.LIST, {
       headers: {
-        Authorization: `Bearer ${token}`, // Gửi token nếu API yêu cầu
+        Authorization: `Bearer ${token}`, 
       },
     });
     return response.data; 
