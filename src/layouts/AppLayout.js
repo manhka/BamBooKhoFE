@@ -1,18 +1,22 @@
 import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { Menu } from "lucide-react";
 import { ToastContainer } from 'react-toastify';
 
 export default function AppLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
   return (
     <div className="d-flex" style={{ minHeight: "100vh", overflow: "hidden" }}>
 
       <ToastContainer />
       {/* ===== Sidebar ===== */}
-      <Sidebar isOpen={isSidebarOpen} />
+      <Sidebar isOpen={isSidebarOpen} onLogout={handleLogout}/>
 
       {/* ===== Main content ===== */}
       <div
@@ -44,7 +48,7 @@ export default function AppLayout() {
 
         {/* ===== Nội dung chính ===== */}
         <div
-          className="flex-grow-1 overflow-auto"
+          className="flex-grow-1 overflow-auto "
           style={{
             backgroundColor: "#ffffff",
           }}

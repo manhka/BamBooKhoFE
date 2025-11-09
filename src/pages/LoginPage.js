@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { login } from "../services/authService";
 import { useNavigate } from "react-router-dom";
-
+import { Eye, EyeOff } from "lucide-react";
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -14,12 +15,7 @@ const LoginPage = () => {
       const res = await login(username, password);
       localStorage.setItem("token", res.token);
       localStorage.setItem("user", JSON.stringify(res.user));
-
-      if (res.user.roleID === 1) {
-        navigate("/dashboard");
-      } else {
-        navigate("/staffHomePage");
-      }
+      navigate("/dashboard");
     } catch (err) {
       setError(err.response?.data?.message || "Đăng nhập thất bại");
     }
@@ -79,22 +75,37 @@ const LoginPage = () => {
               />
             </div>
 
-            <div style={{ marginBottom: "20px" }}>
+            <div style={{ marginBottom: "20px", position: "relative" }}>
               <label style={{ display: "block", marginBottom: "5px" }}>
                 Mật khẩu
               </label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 style={{
                   width: "100%",
-                  padding: "10px",
+                  padding: "10px 40px 10px 10px",
                   borderRadius: "6px",
                   border: "1px solid #ccc",
                 }}
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: "absolute",
+                  right: "10px",
+                  top: "35px",
+                  border: "none",
+                  background: "none",
+                  cursor: "pointer",
+                  padding: 0,
+                }}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
             </div>
 
             {error && (

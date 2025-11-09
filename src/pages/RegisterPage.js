@@ -1,18 +1,43 @@
 import React, { useState } from "react";
 import { register } from "../services/authService";
-import { useNavigate } from "react-router-dom";
-import BackButton from "./BackButton";
+import { Eye, EyeOff } from "lucide-react";
+import BackButton from "../components/BackButton";
+
 const RegisterPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const validateInput = () => {
+    const usernameRegex = /^\S{3,}$/;
+    if (!usernameRegex.test(username)) {
+      setError("⚠️ Tên đăng nhập phải có ít nhất 3 ký tự và không chứa dấu cách.");
+      return false;
+    }
+
+    if (password.length < 6) {
+      setError("⚠️ Mật khẩu phải có ít nhất 6 ký tự.");
+      return false;
+    }
+
+    const phoneRegex = /^0\d{9}$/;
+    if (!phoneRegex.test(phone)) {
+      setError("⚠️ Số điện thoại không hợp lệ. (Phải là 10 số, bắt đầu bằng 0).");
+      return false;
+    }
+
+    return true;
+  };
 
   const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
+
+    if (!validateInput()) return;
 
     try {
       const token = localStorage.getItem("token");
@@ -68,7 +93,9 @@ const RegisterPage = () => {
           >
             Đăng Ký Nhân Viên
           </h2>
+
           <form onSubmit={handleRegister}>
+            {/* Username */}
             <div style={{ marginBottom: "20px" }}>
               <label style={{ display: "block", marginBottom: "5px" }}>
                 Tên đăng nhập
@@ -87,24 +114,41 @@ const RegisterPage = () => {
               />
             </div>
 
-            <div style={{ marginBottom: "20px" }}>
+            {/* Password */}
+            <div style={{ marginBottom: "20px", position: "relative" }}>
               <label style={{ display: "block", marginBottom: "5px" }}>
                 Mật khẩu
               </label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 style={{
                   width: "100%",
-                  padding: "10px",
+                  padding: "10px 40px 10px 10px",
                   borderRadius: "6px",
                   border: "1px solid #ccc",
                 }}
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: "absolute",
+                  right: "10px",
+                  top: "35px",
+                  border: "none",
+                  background: "none",
+                  cursor: "pointer",
+                  padding: 0,
+                }}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
             </div>
 
+            {/* Phone */}
             <div style={{ marginBottom: "20px" }}>
               <label style={{ display: "block", marginBottom: "5px" }}>
                 Số điện thoại
@@ -123,10 +167,9 @@ const RegisterPage = () => {
               />
             </div>
 
+            {/* Error / Success */}
             {error && (
-              <p
-                style={{ color: "red", fontSize: "14px", marginBottom: "10px" }}
-              >
+              <p style={{ color: "red", fontSize: "14px", marginBottom: "10px" }}>
                 {error}
               </p>
             )}
@@ -160,7 +203,7 @@ const RegisterPage = () => {
           </form>
         </div>
 
-        {/* Ảnh bên phải */}
+        {/* Image */}
         <div style={{ flex: 1 }}>
           <img
             src="/assets/panda.webp"

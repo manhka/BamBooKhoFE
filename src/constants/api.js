@@ -9,12 +9,19 @@ export const API_ENDPOINTS = {
     LIST: "/products",
     DETAIL: (barcode) => `/products/details/${barcode}`,
     ALL_FOR_LOOKUP: '/products/all-for-lookup',
+    CREATE: "/products/create",
+    UPDATE: (barcode) => `/products/update/${barcode}`,
+    ARCHIVE: (barcode) => `/products/archive/${barcode}`,
   },
   CATEGORIES: {
     LIST: "/categories",
     DETAIL: (id) => `/categories/${id}`,
     SEARCH_BY_NAME: (name) =>
       `/categories/search/by-name?name=${encodeURIComponent(name)}`,
+    CREATE: "/categories",
+    UPDATE: (id) => `/categories/${id}`,
+    DELETE: (id) => `/categories/${id}`,
+    RESTORE: (id) => `/categories/${id}/restore`,
   },
 
   BRANDS: {
@@ -22,6 +29,21 @@ export const API_ENDPOINTS = {
     DETAIL: (id) => `/brands/${id}`,
     SEARCH_BY_NAME: (name) =>
       `/brands/search/by-name?name=${encodeURIComponent(name)}`,
+    CREATE: "/brands",
+    UPDATE: (id) => `/brands/${id}`,
+    DELETE: (id) => `/brands/${id}`,
+    RESTORE: (id) => `/brands/${id}/restore`,
+  },
+  CUSTOMERS: {
+    SEARCH_BY_NAME: "/customers/search",
+  },
+  CUSTOMER_RETURN: {
+    WARRANTY: "/customer-return/warranty",
+    WARRANTY_BY_ID: (exportDetailId) =>
+      `/customer-return/warranty/${exportDetailId}`,
+    CREATE: "/customer-return/create",
+    LIST: "/customer-return/list",
+    DETAIL: (id) => `/customer-return/detail/${id}`,
   },
 
   IMPORT: {
