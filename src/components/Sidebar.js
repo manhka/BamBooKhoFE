@@ -12,6 +12,8 @@ import {
   Tag,
   LogIn,
   RefreshCcw,
+  FileText,
+  Activity,
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -23,11 +25,23 @@ export default function Sidebar({ isOpen, onLogout, onSelectPage }) {
 
   const menuItems = [
     {
+      id: "dashboard",
+      label: "Dashboard",
+      icon: BarChart3,
+      path: "/dashboard",
+    },
+    {
+      id: "report",
+      label: "Report",
+      icon: FileText,
+      path: "/report",
+    },
+    {
       id: "employees",
       label: "Nhân Viên",
       icon: Users,
       submenu: [
-        { label: "Tất cả nhân viên", page: "staffList" },
+        { label: "Tất cả nhân viên", path: "/staffList" },
         { label: "Thêm nhân viên", path: "/register" },
       ],
     },
@@ -43,7 +57,7 @@ export default function Sidebar({ isOpen, onLogout, onSelectPage }) {
     {
       id: "activities",
       label: "Hoạt động",
-      icon: RefreshCcw,
+      icon: Activity,
       submenu: [{ label: "Danh sách hoạt động", page: "activityList" }],
     },
     {
@@ -123,9 +137,13 @@ export default function Sidebar({ isOpen, onLogout, onSelectPage }) {
             <li key={item.id} className="nav-item">
               {/* --- Mục chính --- */}
               <button
-                onClick={() =>
-                  setExpandedMenu(expandedMenu === item.id ? null : item.id)
-                }
+                onClick={() => {
+                  if (item.submenu) {
+                    setExpandedMenu(expandedMenu === item.id ? null : item.id);
+                  } else if (item.path) {
+                    navigate(item.path);
+                  }
+                }}
                 className="nav-link d-flex align-items-center gap-2 py-2 px-3 rounded w-100 text-start border-0"
                 style={{
                   color: "#334155",
@@ -135,12 +153,15 @@ export default function Sidebar({ isOpen, onLogout, onSelectPage }) {
               >
                 <item.icon size={18} />
                 <span>{item.label}</span>
-                <ChevronDown
-                  size={16}
-                  className={`ms-auto transition-transform ${
-                    expandedMenu === item.id ? "rotate-180" : ""
-                  }`}
-                />
+
+                {item.submenu && (
+                  <ChevronDown
+                    size={16}
+                    className={`ms-auto transition-transform ${
+                      expandedMenu === item.id ? "rotate-180" : ""
+                    }`}
+                  />
+                )}
               </button>
 
               {/* --- Submenu --- */}

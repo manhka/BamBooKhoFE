@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
-import { getProducts, archiveProduct } from "../services/productService";
+import { getListStockWarningProducts } from "../services/productService";
 import { getAllBrands } from "../services/brandService";
 import { getAllCategories } from "../services/categoryService";
 import { Link } from "react-router-dom";
 
-const ProductList = () => {
+const LowStockProductList = () => {
   const [products, setProducts] = useState([]);
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -19,10 +19,6 @@ const ProductList = () => {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
-
-  // Modal state
-  const [modalProduct, setModalProduct] = useState(null);
-  const [modalLoading, setModalLoading] = useState(false);
 
   // --- Fetch danh sách thương hiệu & danh mục ---
   useEffect(() => {
@@ -46,7 +42,7 @@ const ProductList = () => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const result = await getProducts({
+        const result = await getListStockWarningProducts({
           BrandID: filters.BrandID,
           CategoryID: filters.CategoryID,
           keyword: filters.keyword,
@@ -72,29 +68,6 @@ const ProductList = () => {
   const currentProducts = products.slice(indexOfFirst, indexOfLast);
   const totalPages = Math.ceil(products.length / pageSize);
 
-  // --- Archive / Restore product ---
-  const handleArchive = async () => {
-    if (!modalProduct) return;
-    try {
-      setModalLoading(true);
-      const res = await archiveProduct(
-        modalProduct.BarcodeProduct,
-        !modalProduct.IsArchive
-      );
-      // Update product in local state
-      setProducts((prev) =>
-        prev.map((p) =>
-          p.BarcodeProduct === modalProduct.BarcodeProduct ? res.data : p
-        )
-      );
-      setModalProduct(null);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setModalLoading(false);
-    }
-  };
-
   return (
     <div className="container-fluid">
       {/* Filter Section */}
@@ -108,12 +81,8 @@ const ProductList = () => {
         }}
       >
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <h3 className="m-0">Danh sách sản phẩm</h3>
-          <Link to="/products/add" className="btn btn-primary">
-            + Thêm sản phẩm
-          </Link>
+          <h3 className="m-0">Danh sách sản phẩm sắp hết hàng</h3>
         </div>
-
         <div className="row g-2">
           <div className="col-md-4">
             <input
@@ -244,7 +213,7 @@ const ProductList = () => {
                   <td>{p.CostPrice?.toLocaleString()}₫</td>
                   <td>{p.SalePrice?.toLocaleString()}₫</td>
                   <td>{p.Brand?.BrandName}</td>
-                  <td>{p.NumberOfProduct}</td>
+                  <td style={{ color: "red" }}>{p.NumberOfProduct}</td>
                   <td>{p.IsArchive ? "Đã lưu trữ" : "Hoạt động"}</td>{" "}
                   {/* Cột trạng thái */}
                   <td>
@@ -255,20 +224,6 @@ const ProductList = () => {
                     >
                       <FaEye />
                     </Link>
-                    <Link
-                      to={`/products/update/${p.BarcodeProduct}`}
-                      className="btn btn-sm btn-warning  me-1"
-                      disabled={p.IsArchive}
-                      color="white"
-                    >
-                      <FaEdit color="white" />
-                    </Link>
-                    <button
-                      className="btn btn-sm btn-danger"
-                      onClick={() => setModalProduct(p)}
-                    >
-                      <FaTrash />
-                    </button>
                   </td>
                 </tr>
               ))
@@ -305,60 +260,8 @@ const ProductList = () => {
           </button>
         </div>
       )}
-
-      {/* Modal Archive */}
-      {modalProduct && (
-        <>
-          <div className="modal fade show d-block" tabIndex="-1">
-            <div className="modal-dialog">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title">
-                    {modalProduct.IsArchive
-                      ? "Khôi phục sản phẩm"
-                      : "Lưu trữ sản phẩm"}
-                  </h5>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    onClick={() => setModalProduct(null)}
-                  ></button>
-                </div>
-                <div className="modal-body">
-                  <p>
-                    {modalProduct.IsArchive
-                      ? "Bạn có muốn khôi phục sản phẩm này không?"
-                      : "Bạn có chắc muốn lưu trữ sản phẩm này không?"}
-                  </p>
-                </div>
-                <div className="modal-footer">
-                  <button
-                    className="btn btn-secondary"
-                    onClick={() => setModalProduct(null)}
-                  >
-                    Hủy
-                  </button>
-                  <button
-                    className="btn btn-danger"
-                    onClick={handleArchive}
-                    disabled={modalLoading}
-                  >
-                    {modalLoading
-                      ? "Đang xử lý..."
-                      : modalProduct.IsArchive
-                      ? "Khôi phục"
-                      : "Lưu trữ"}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* backdrop */}
-          <div className="modal-backdrop fade show"></div>
-        </>
-      )}
     </div>
   );
 };
 
-export default ProductList;
+export default LowStockProductList;

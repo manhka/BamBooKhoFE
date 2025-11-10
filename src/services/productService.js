@@ -76,3 +76,61 @@ export const archiveProduct = async (barcode, archive = true) => {
     throw error.response?.data || { message: error.message };
   }
 };
+export const numberLowProductWarning = async () => {
+  try {
+    const res = await api.get(API_ENDPOINTS.PRODUCTS.NUMBER_LOW_STOCK_WARNING);
+    console.log("count:", res.data.count);
+
+    return res.data.count;
+  } catch (error) {
+    console.error(
+      "get numberLowProductWarning error:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || { message: error.message };
+  }
+};
+export const getNumberProduct = async () => {
+  try {
+    const res = await api.get(API_ENDPOINTS.PRODUCTS.TOTAL_PRODUCT_COUNT);
+    return res.data.totalProducts;
+  } catch (error) {
+    console.error(
+      "get numberProduct error:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || { message: error.message };
+  }
+};
+export const getListStockWarningProducts = async (filters = {}) => {
+  try {
+    const { keyword = "", BrandID = "", CategoryID = "" } = filters;
+
+    const params = {};
+    if (keyword) params.keyword = keyword;
+
+    if (BrandID) params.BrandID = BrandID;
+    if (CategoryID) params.CategoryID = CategoryID;
+
+    const res = await api.get(API_ENDPOINTS.PRODUCTS.LIST_LOW_STOCK_WARNING, {
+      params,
+    });
+    return res.data;
+  } catch (error) {
+    console.error("getProducts error:", error.response?.data || error.message);
+    throw error.response?.data || { message: error.message };
+  }
+};
+
+export const getMonthlyRevenue = async () => {
+  try {
+    const res = await api.get(API_ENDPOINTS.PRODUCTS.MONTHLY_REVENUE);
+    return res.data.totalRevenue;
+  } catch (error) {
+    console.error(
+      "get MonthlyRevenue error:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || { message: error.message };
+  }
+};

@@ -10,7 +10,7 @@ const StaffList = () => {
   const [itemsPerPage, setItemsPerPage] = useState(2);
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [activities, setActivities] = useState([]); 
+  const [activities, setActivities] = useState([]);
   const [staffActivities, setStaffActivities] = useState([]);
   const [formData, setFormData] = useState({
     Username: "",
@@ -23,20 +23,21 @@ const StaffList = () => {
 
   const fetchEmployees = async () => {
     try {
-      const res = await axios.get("http://localhost:3001/api/users/role", {
+      const res = await axios.get("http://localhost:3000/api/users/role", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       const normalized = res.data.map((emp) => ({
         ...emp,
-        Status: emp.Status === true || emp.Status === "1" || emp.Status === 1 ? 1 : 0,
+        Status:
+          emp.Status === true || emp.Status === "1" || emp.Status === 1 ? 1 : 0,
       }));
 
       const withActivities = await Promise.all(
         normalized.map(async (emp) => {
           try {
             const actRes = await axios.get(
-              `http://localhost:3001/api/activities/staff-activities/${emp.UserID}`,
+              `http://localhost:3000/api/activities/staff-activities/${emp.UserID}`,
               { headers: { Authorization: `Bearer ${token}` } }
             );
             return { ...emp, activities: actRes.data || [] };
@@ -48,14 +49,17 @@ const StaffList = () => {
 
       setEmployees(withActivities);
     } catch (error) {
-      console.error("Lỗi tải nhân viên:", error.response?.data || error.message);
+      console.error(
+        "Lỗi tải nhân viên:",
+        error.response?.data || error.message
+      );
       showAlert("Không thể tải danh sách nhân viên.", "danger");
     }
   };
 
   const fetchAllActivities = async () => {
     try {
-      const res = await axios.get("http://localhost:3001/api/activities/view", {
+      const res = await axios.get("http://localhost:3000/api/activities/view", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setActivities(res.data);
@@ -84,7 +88,7 @@ const StaffList = () => {
   const handleToggle = async (id) => {
     try {
       await axios.put(
-        `http://localhost:3001/api/users/toggle/${id}`,
+        `http://localhost:3000/api/users/toggle/${id}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -113,7 +117,7 @@ const StaffList = () => {
 
     try {
       const res = await axios.get(
-        `http://localhost:3001/api/activities/staff-activities/${id}`,
+        `http://localhost:3000/api/activities/staff-activities/${id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setStaffActivities(res.data || []);
@@ -131,64 +135,68 @@ const StaffList = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
   const handleSave = async () => {
-  try {
-    await axios.put(
-      `http://localhost:3001/api/users/edit/${selectedUser.UserID}`,
-      formData,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-
-    const newActivities = staffActivities.filter(a => a.isNew);
-    if (newActivities.length > 0) {
-      const activityIds = newActivities.map(a => a.ActivityID);
-      await axios.post(
-        "http://localhost:3001/api/activities/staff-activities",
-        {
-          UserID: selectedUser.UserID,
-          ActivityID: activityIds, 
-        },
+    try {
+      await axios.put(
+        `http://localhost:3000/api/users/edit/${selectedUser.UserID}`,
+        formData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
+      const newActivities = staffActivities.filter((a) => a.isNew);
+      if (newActivities.length > 0) {
+        const activityIds = newActivities.map((a) => a.ActivityID);
+        await axios.post(
+          "http://localhost:3000/api/activities/staff-activities",
+          {
+            UserID: selectedUser.UserID,
+            ActivityID: activityIds,
+          },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      }
+
+      setShowModal(false);
+      fetchEmployees();
+      showAlert("Cập nhật nhân viên và giao hoạt động thành công!", "success");
+    } catch (error) {
+      console.error("Lỗi lưu:", error.response?.data || error.message);
+      showAlert("Không thể lưu thay đổi.", "danger");
+    }
+  };
+  const handleAssignActivity = (activityId) => {
+    const id = Number(activityId);
+    const selectedActivity = activities.find(
+      (a) => Number(a.ActivityID) === id
+    );
+    if (!selectedActivity) return;
+
+    const exists = staffActivities.some((a) => Number(a.ActivityID) === id);
+    if (exists) {
+      showAlert("Nhân viên đã được giao hoạt động này.", "danger");
+      return;
     }
 
-    setShowModal(false);
-    fetchEmployees();
-    showAlert("Cập nhật nhân viên và giao hoạt động thành công!", "success");
-  } catch (error) {
-    console.error("Lỗi lưu:", error.response?.data || error.message);
-    showAlert("Không thể lưu thay đổi.", "danger");
-  }
-};
-  const handleAssignActivity = (activityId) => {
-  const id = Number(activityId);
-  const selectedActivity = activities.find(a => Number(a.ActivityID) === id);
-  if (!selectedActivity) return;
-
-  const exists = staffActivities.some(a => Number(a.ActivityID) === id);
-  if (exists) {
-    showAlert("Nhân viên đã được giao hoạt động này.", "danger");
-    return;
-  }
-
-  setStaffActivities(prev => [
-    ...prev,
-    {
-      StaffActivityID: Date.now(), 
-      ActivityID: id,
-      ActivityName: selectedActivity.ActivityName || selectedActivity.Name,
-      Description: selectedActivity.Description,
-      isNew: true,
-    },
-  ]);
-};
+    setStaffActivities((prev) => [
+      ...prev,
+      {
+        StaffActivityID: Date.now(),
+        ActivityID: id,
+        ActivityName: selectedActivity.ActivityName || selectedActivity.Name,
+        Description: selectedActivity.Description,
+        isNew: true,
+      },
+    ]);
+  };
   const handleRemoveActivity = async (staffActivityId) => {
     try {
       await axios.delete(
-        `http://localhost:3001/api/activities/staff-activities/${staffActivityId}`,
+        `http://localhost:3000/api/activities/staff-activities/${staffActivityId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       showAlert("Đã xóa activity khỏi nhân viên!", "success");
-      setStaffActivities((prev) => prev.filter((a) => a.StaffActivityID !== staffActivityId));
+      setStaffActivities((prev) =>
+        prev.filter((a) => a.StaffActivityID !== staffActivityId)
+      );
       fetchEmployees();
     } catch (error) {
       console.error("Lỗi xóa activity:", error);
@@ -255,7 +263,9 @@ const StaffList = () => {
                   <td>
                     {emp.activities?.length > 0 ? (
                       emp.activities.map((a) => (
-                        <div key={a.StaffActivityID}>{a.ActivityName || "Không tên"}</div>
+                        <div key={a.StaffActivityID}>
+                          {a.ActivityName || "Không tên"}
+                        </div>
                       ))
                     ) : (
                       <span className="text-muted">Chưa có</span>
@@ -283,7 +293,11 @@ const StaffList = () => {
                       }`}
                       onClick={() => handleToggle(emp.UserID)}
                     >
-                      {emp.Status === 1 ? <PowerOff size={16} /> : <Power size={16} />}
+                      {emp.Status === 1 ? (
+                        <PowerOff size={16} />
+                      ) : (
+                        <Power size={16} />
+                      )}
                     </button>
                   </td>
                 </tr>
@@ -366,7 +380,9 @@ const StaffList = () => {
                   </div>
 
                   <div className="col-md-6">
-                    <label className="form-label fw-bold">Hoạt động đang đảm nhận</label>
+                    <label className="form-label fw-bold">
+                      Hoạt động đang đảm nhận
+                    </label>
                     <ul className="list-group mb-2">
                       {staffActivities.length > 0 ? (
                         staffActivities.map((a) => (
@@ -377,7 +393,9 @@ const StaffList = () => {
                             {a.ActivityName || "Không tên"}
                             <button
                               className="btn btn-sm btn-outline-danger"
-                              onClick={() => handleRemoveActivity(a.StaffActivityID)}
+                              onClick={() =>
+                                handleRemoveActivity(a.StaffActivityID)
+                              }
                             >
                               <Trash2 size={14} />
                             </button>
