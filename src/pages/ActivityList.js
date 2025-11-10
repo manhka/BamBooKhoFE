@@ -7,7 +7,10 @@ export default function ActivityPage() {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ ActivityName: "", Description: "" });
   const [editModal, setEditModal] = useState({ open: false, activity: null });
-  const [editForm, setEditForm] = useState({ ActivityName: "", Description: "" });
+  const [editForm, setEditForm] = useState({
+    ActivityName: "",
+    Description: "",
+  });
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,10 +19,13 @@ export default function ActivityPage() {
   const fetchActivities = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("http://localhost:3001/api/activities/view");
+      const res = await axios.get("http://localhost:3000/api/activities/view");
       setActivities(res.data);
     } catch (error) {
-      console.error("❌ Lỗi lấy danh sách hoạt động:", error.response?.data || error.message);
+      console.error(
+        "❌ Lỗi lấy danh sách hoạt động:",
+        error.response?.data || error.message
+      );
     } finally {
       setLoading(false);
     }
@@ -31,16 +37,20 @@ export default function ActivityPage() {
 
   const handleCreate = async (e) => {
     e.preventDefault();
-    if (!form.ActivityName) return alert("Vui lòng nhập tên hoạt động");
+    if (!form.ActivityName) return;
     try {
-      const res = await axios.post("http://localhost:3001/api/activities/create", form);
-      alert(res.data.message);
+      const res = await axios.post(
+        "http://localhost:3000/api/activities/create",
+        form
+      );
       setForm({ ActivityName: "", Description: "" });
       setCreateModalOpen(false);
       fetchActivities();
     } catch (error) {
-      console.error("❌ Lỗi tạo hoạt động:", error.response?.data || error.message);
-      alert("Tạo hoạt động thất bại");
+      console.error(
+        "❌ Lỗi tạo hoạt động:",
+        error.response?.data || error.message
+      );
     }
   };
 
@@ -55,18 +65,22 @@ export default function ActivityPage() {
 
   const handleEdit = async (e) => {
     e.preventDefault();
-    if (!editForm.ActivityName) return alert("Tên hoạt động không được để trống");
+    if (!editForm.ActivityName) {
+      return alert("Tên hoạt động không được để trống");
+    }
+
     try {
       const res = await axios.put(
-        `http://localhost:3001/api/activities/${editModal.activity.ActivityID}`,
+        `http://localhost:3000/api/activities/${editModal.activity.ActivityID}`,
         editForm
       );
-      alert(res.data.message);
       closeEditModal();
       fetchActivities();
     } catch (error) {
-      console.error("❌ Lỗi cập nhật hoạt động:", error.response?.data || error.message);
-      alert("Cập nhật hoạt động thất bại");
+      console.error(
+        "❌ Lỗi cập nhật hoạt động:",
+        error.response?.data || error.message
+      );
     }
   };
 
@@ -84,7 +98,7 @@ export default function ActivityPage() {
   return (
     <div className="p-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="fw-bold mt-3">Hoạt động</h2>
+        <h2 className="fw-bold mt-5">Danh sách hoạt động</h2>
         <div className="d-flex align-items-center gap-2">
           <div className="input-group" style={{ width: "250px" }}>
             <input
@@ -102,7 +116,7 @@ export default function ActivityPage() {
             className="btn btn-success d-flex align-items-center"
             onClick={() => setCreateModalOpen(true)}
           >
-            <Plus size={18}/>
+            <Plus size={18} />
           </button>
         </div>
       </div>
@@ -129,8 +143,8 @@ export default function ActivityPage() {
                     <td>{(currentPage - 1) * itemsPerPage + idx + 1}</td>
                     <td>{act.ActivityName}</td>
                     <td>{act.Description || "-"}</td>
-                    <td>{new Date(act.CreateAt).toLocaleString()}</td>
-                    <td>{new Date(act.UpdateAt).toLocaleString()}</td>
+                    <td>{new Date(act.CreatedAt).toLocaleString()}</td>
+                    <td>{new Date(act.UpdatedAt).toLocaleString()}</td>
                     <td>
                       <button
                         className="btn btn-sm btn-outline-primary"
@@ -157,7 +171,9 @@ export default function ActivityPage() {
                 {Array.from({ length: totalPages }, (_, i) => (
                   <li
                     key={i + 1}
-                    className={`page-item ${currentPage === i + 1 ? "active" : ""}`}
+                    className={`page-item ${
+                      currentPage === i + 1 ? "active" : ""
+                    }`}
                   >
                     <button
                       className="page-link"
@@ -197,7 +213,9 @@ export default function ActivityPage() {
                       type="text"
                       placeholder="Tên hoạt động"
                       value={form.ActivityName}
-                      onChange={(e) => setForm({ ...form, ActivityName: e.target.value })}
+                      onChange={(e) =>
+                        setForm({ ...form, ActivityName: e.target.value })
+                      }
                       className="form-control"
                       required
                     />
@@ -207,7 +225,9 @@ export default function ActivityPage() {
                     <textarea
                       placeholder="Mô tả"
                       value={form.Description}
-                      onChange={(e) => setForm({ ...form, Description: e.target.value })}
+                      onChange={(e) =>
+                        setForm({ ...form, Description: e.target.value })
+                      }
                       className="form-control"
                     />
                   </div>
@@ -240,7 +260,11 @@ export default function ActivityPage() {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">Sửa hoạt động</h5>
-                <button type="button" className="btn-close" onClick={closeEditModal}></button>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={closeEditModal}
+                ></button>
               </div>
               <div className="modal-body">
                 <form onSubmit={handleEdit}>
@@ -250,7 +274,10 @@ export default function ActivityPage() {
                       type="text"
                       value={editForm.ActivityName}
                       onChange={(e) =>
-                        setEditForm({ ...editForm, ActivityName: e.target.value })
+                        setEditForm({
+                          ...editForm,
+                          ActivityName: e.target.value,
+                        })
                       }
                       className="form-control"
                       required
@@ -261,7 +288,10 @@ export default function ActivityPage() {
                     <textarea
                       value={editForm.Description}
                       onChange={(e) =>
-                        setEditForm({ ...editForm, Description: e.target.value })
+                        setEditForm({
+                          ...editForm,
+                          Description: e.target.value,
+                        })
                       }
                       className="form-control"
                     />

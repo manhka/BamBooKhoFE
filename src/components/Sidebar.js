@@ -3,14 +3,14 @@
 import React, { useState } from "react";
 import {
   Users,
-  Settings,
   BarChart3,
   LogOut,
   ChevronDown,
   ShoppingCart,
+  ArrowDownSquare,
+  ArrowUpSquare,
   Layers,
   Tag,
-  LogIn,
   RefreshCcw,
   FileText,
   Activity,
@@ -58,7 +58,7 @@ export default function Sidebar({ isOpen, onLogout, onSelectPage }) {
       id: "activities",
       label: "Hoạt động",
       icon: Activity,
-      submenu: [{ label: "Danh sách hoạt động", page: "activityList" }],
+      submenu: [{ label: "Danh sách hoạt động", path: "/activities" }],
     },
     {
       id: "change-products",
@@ -93,11 +93,25 @@ export default function Sidebar({ isOpen, onLogout, onSelectPage }) {
         { label: "Thêm thương hiệu", path: "/brands/add" },
       ],
     },
+
     {
-      id: "settings",
-      label: "Cài đặt",
-      icon: Settings,
-      path: "/settings",
+      id: "import",
+      label: "Nhập kho",
+      icon: ArrowDownSquare,
+      submenu: [
+        { label: "Nhập hàng", path: "/import" },
+        { label: "Lịch sử nhập hàng", path: "/import-history" },
+      ],
+    },
+
+    {
+      id: "export",
+      label: "Xuất kho",
+      icon: ArrowUpSquare,
+      submenu: [
+        { label: "Xuất Hàng", path: "/export" },
+        { label: "Lịch sử xuất hàng", path: "/export-history" },
+      ],
     },
   ];
 

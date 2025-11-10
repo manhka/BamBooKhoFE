@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { FaEye, FaEdit, FaTrash, FaUndo } from "react-icons/fa";
+import { FaEdit, FaTrash, FaUndo } from "react-icons/fa";
 import {
   getAllBrands,
   deleteBrand,
@@ -179,7 +179,8 @@ const BrandList = () => {
         >
           <h5 className="mb-1 fw-semibold">Thương hiệu</h5>
           <p className="text-muted mb-0" style={{ fontSize: "0.9rem" }}>
-            Quản lý thương hiệu sản phẩm. Nhấp vào tên thương hiệu để xem chi tiết.
+            Quản lý thương hiệu sản phẩm. Nhấp vào tên thương hiệu để xem chi
+            tiết.
           </p>
         </div>
 
@@ -191,111 +192,126 @@ const BrandList = () => {
           }}
         >
           <table className="table table-bordered mb-0">
-          <thead
-            className="table-light"
-            style={{
-              position: "sticky",
-              top: 0,
-              zIndex: 500,
-              background: "#f8f9fa",
-            }}
-          >
-            <tr>
-              <th style={{ width: "50px", textAlign: "center" }}>
-                <input
-                  type="checkbox"
-                  checked={isAllSelected}
-                  onChange={handleSelectAll}
-                />
-              </th>
-              <th style={{ minWidth: "250px" }}>Tên thương hiệu</th>
-              <th style={{ width: "120px", textAlign: "center" }}>Mã</th>
-              <th style={{ width: "150px", textAlign: "center" }}>Trạng thái</th>
-              <th style={{ width: "150px", textAlign: "center" }}>Hành động</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
+            <thead
+              className="table-light"
+              style={{
+                position: "sticky",
+                top: 0,
+                zIndex: 500,
+                background: "#f8f9fa",
+              }}
+            >
               <tr>
-                <td colSpan="5" className="text-center">
-                  Đang tải...
-                </td>
+                <th style={{ width: "50px", textAlign: "center" }}>
+                  <input
+                    type="checkbox"
+                    checked={isAllSelected}
+                    onChange={handleSelectAll}
+                  />
+                </th>
+                <th style={{ minWidth: "250px" }}>Tên thương hiệu</th>
+                <th style={{ width: "120px", textAlign: "center" }}>Mã</th>
+                <th style={{ width: "150px", textAlign: "center" }}>
+                  Trạng thái
+                </th>
+                <th style={{ width: "150px", textAlign: "center" }}>
+                  Hành động
+                </th>
               </tr>
-            ) : currentBrands.length > 0 ? (
-              currentBrands.map((brand) => (
-                <tr key={brand.BrandID}>
-                  <td style={{ textAlign: "center", verticalAlign: "middle" }}>
-                    <input
-                      type="checkbox"
-                      checked={selectedItems.includes(brand.BrandID)}
-                      onChange={() => handleSelectItem(brand.BrandID)}
-                    />
-                  </td>
-                  <td style={{ verticalAlign: "middle" }}>
-                    <div className="d-flex align-items-center">
-                      <div>
-                        <div className="fw-semibold">{brand.BrandName}</div>
-                        <div className="text-muted" style={{ fontSize: "0.85rem" }}>
-                          {brand.Description || "Không có mô tả"}
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td style={{ textAlign: "center", verticalAlign: "middle" }}>
-                    <span className="badge bg-secondary">
-                      BRAND{String(brand.BrandID).padStart(3, "0")}
-                    </span>
-                  </td>
-                  <td style={{ textAlign: "center", verticalAlign: "middle" }}>
-                    <span
-                      className={`badge ${
-                        brand.IsArchive ? "bg-danger" : "bg-success"
-                      }`}
-                    >
-                      {brand.IsArchive ? "Đã lưu trữ" : "Hoạt động"}
-                    </span>
-                  </td>
-                  <td style={{ textAlign: "center", verticalAlign: "middle" }}>
-                    <div className="d-flex gap-1 justify-content-center">
-                      <button
-                        className="btn btn-sm btn-success"
-                        onClick={() =>
-                          navigate(`/brands/edit/${brand.BrandID}`)
-                        }
-                        title="Sửa"
-                      >
-                        <FaEdit />
-                      </button>
-                      {brand.IsArchive ? (
-                        <button
-                          className="btn btn-sm btn-warning"
-                          onClick={() => handleRestore(brand.BrandID)}
-                          title="Khôi phục"
-                        >
-                          <FaUndo />
-                        </button>
-                      ) : (
-                        <button
-                          className="btn btn-sm btn-danger"
-                          onClick={() => handleDelete(brand.BrandID)}
-                          title="Xóa"
-                        >
-                          <FaTrash />
-                        </button>
-                      )}
-                    </div>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan="5" className="text-center">
+                    Đang tải...
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="5" className="text-center text-muted">
-                  Không có dữ liệu
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              ) : currentBrands.length > 0 ? (
+                currentBrands.map((brand) => (
+                  <tr key={brand.BrandID}>
+                    <td
+                      style={{ textAlign: "center", verticalAlign: "middle" }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedItems.includes(brand.BrandID)}
+                        onChange={() => handleSelectItem(brand.BrandID)}
+                      />
+                    </td>
+                    <td style={{ verticalAlign: "middle" }}>
+                      <div className="d-flex align-items-center">
+                        <div>
+                          <div className="fw-semibold">{brand.BrandName}</div>
+                          <div
+                            className="text-muted"
+                            style={{ fontSize: "0.85rem" }}
+                          >
+                            {brand.Description || "Không có mô tả"}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      style={{ textAlign: "center", verticalAlign: "middle" }}
+                    >
+                      <span className="badge bg-secondary">
+                        BRAND{String(brand.BrandID).padStart(3, "0")}
+                      </span>
+                    </td>
+                    <td
+                      style={{ textAlign: "center", verticalAlign: "middle" }}
+                    >
+                      <span
+                        className={`badge ${
+                          brand.IsArchive ? "bg-danger" : "bg-success"
+                        }`}
+                      >
+                        {brand.IsArchive ? "Đã lưu trữ" : "Hoạt động"}
+                      </span>
+                    </td>
+                    <td
+                      style={{ textAlign: "center", verticalAlign: "middle" }}
+                    >
+                      <div className="d-flex gap-1 justify-content-center">
+                        <button
+                          className="btn btn-sm btn-success"
+                          onClick={() =>
+                            navigate(`/brands/edit/${brand.BrandID}`)
+                          }
+                          title="Sửa"
+                        >
+                          <FaEdit />
+                        </button>
+                        {brand.IsArchive ? (
+                          <button
+                            className="btn btn-sm btn-warning"
+                            onClick={() => handleRestore(brand.BrandID)}
+                            title="Khôi phục"
+                          >
+                            <FaUndo />
+                          </button>
+                        ) : (
+                          <button
+                            className="btn btn-sm btn-danger"
+                            onClick={() => handleDelete(brand.BrandID)}
+                            title="Xóa"
+                          >
+                            <FaTrash />
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="text-center text-muted">
+                    Không có dữ liệu
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
 

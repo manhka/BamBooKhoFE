@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { FaEye, FaEdit, FaTrash, FaUndo } from "react-icons/fa";
+import { FaEdit, FaTrash, FaUndo } from "react-icons/fa";
 import {
   getAllCategories,
   deleteCategory,
@@ -191,109 +191,124 @@ const CategoryList = () => {
           }}
         >
           <table className="table table-bordered mb-0">
-          <thead
-            className="table-light"
-            style={{
-              position: "sticky",
-              top: 0,
-              zIndex: 500,
-              background: "#f8f9fa",
-            }}
-          >
-            <tr>
-              <th style={{ width: "50px", textAlign: "center" }}>
-                <input
-                  type="checkbox"
-                  checked={isAllSelected}
-                  onChange={handleSelectAll}
-                />
-              </th>
-              <th style={{ minWidth: "250px" }}>Tên danh mục</th>
-              <th style={{ width: "120px", textAlign: "center" }}>Mã</th>
-              <th style={{ width: "150px", textAlign: "center" }}>Trạng thái</th>
-              <th style={{ width: "150px", textAlign: "center" }}>Hành động</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
+            <thead
+              className="table-light"
+              style={{
+                position: "sticky",
+                top: 0,
+                zIndex: 500,
+                background: "#f8f9fa",
+              }}
+            >
               <tr>
-                <td colSpan="5" className="text-center">
-                  Đang tải...
-                </td>
+                <th style={{ width: "50px", textAlign: "center" }}>
+                  <input
+                    type="checkbox"
+                    checked={isAllSelected}
+                    onChange={handleSelectAll}
+                  />
+                </th>
+                <th style={{ minWidth: "250px" }}>Tên danh mục</th>
+                <th style={{ width: "120px", textAlign: "center" }}>Mã</th>
+                <th style={{ width: "150px", textAlign: "center" }}>
+                  Trạng thái
+                </th>
+                <th style={{ width: "150px", textAlign: "center" }}>
+                  Hành động
+                </th>
               </tr>
-            ) : currentCategories.length > 0 ? (
-              currentCategories.map((cat) => (
-                <tr key={cat.CategoryID}>
-                  <td style={{ textAlign: "center", verticalAlign: "middle" }}>
-                    <input
-                      type="checkbox"
-                      checked={selectedItems.includes(cat.CategoryID)}
-                      onChange={() => handleSelectItem(cat.CategoryID)}
-                    />
-                  </td>
-                  <td style={{ verticalAlign: "middle" }}>
-                    <div>
-                      <div className="fw-semibold">{cat.CategoryName}</div>
-                      <div className="text-muted" style={{ fontSize: "0.85rem" }}>
-                        {cat.Description || "Không có mô tả"}
-                      </div>
-                    </div>
-                  </td>
-                  <td style={{ textAlign: "center", verticalAlign: "middle" }}>
-                    <span className="badge bg-secondary">
-                      CAT{String(cat.CategoryID).padStart(3, "0")}
-                    </span>
-                  </td>
-                  <td style={{ textAlign: "center", verticalAlign: "middle" }}>
-                    <span
-                      className={`badge ${
-                        cat.IsArchive ? "bg-danger" : "bg-success"
-                      }`}
-                    >
-                      {cat.IsArchive ? "Đã lưu trữ" : "Hoạt động"}
-                    </span>
-                  </td>
-                  <td style={{ textAlign: "center", verticalAlign: "middle" }}>
-                    <div className="d-flex gap-1 justify-content-center">
-                      <button
-                        className="btn btn-sm btn-success"
-                        onClick={() =>
-                          navigate(`/categories/edit/${cat.CategoryID}`)
-                        }
-                        title="Sửa"
-                      >
-                        <FaEdit />
-                      </button>
-                      {cat.IsArchive ? (
-                        <button
-                          className="btn btn-sm btn-warning"
-                          onClick={() => handleRestore(cat.CategoryID)}
-                          title="Khôi phục"
-                        >
-                          <FaUndo />
-                        </button>
-                      ) : (
-                        <button
-                          className="btn btn-sm btn-danger"
-                          onClick={() => handleDelete(cat.CategoryID)}
-                          title="Xóa"
-                        >
-                          <FaTrash />
-                        </button>
-                      )}
-                    </div>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan="5" className="text-center">
+                    Đang tải...
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="5" className="text-center text-muted">
-                  Không có dữ liệu
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              ) : currentCategories.length > 0 ? (
+                currentCategories.map((cat) => (
+                  <tr key={cat.CategoryID}>
+                    <td
+                      style={{ textAlign: "center", verticalAlign: "middle" }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedItems.includes(cat.CategoryID)}
+                        onChange={() => handleSelectItem(cat.CategoryID)}
+                      />
+                    </td>
+                    <td style={{ verticalAlign: "middle" }}>
+                      <div>
+                        <div className="fw-semibold">{cat.CategoryName}</div>
+                        <div
+                          className="text-muted"
+                          style={{ fontSize: "0.85rem" }}
+                        >
+                          {cat.Description || "Không có mô tả"}
+                        </div>
+                      </div>
+                    </td>
+                    <td
+                      style={{ textAlign: "center", verticalAlign: "middle" }}
+                    >
+                      <span className="badge bg-secondary">
+                        CAT{String(cat.CategoryID).padStart(3, "0")}
+                      </span>
+                    </td>
+                    <td
+                      style={{ textAlign: "center", verticalAlign: "middle" }}
+                    >
+                      <span
+                        className={`badge ${
+                          cat.IsArchive ? "bg-danger" : "bg-success"
+                        }`}
+                      >
+                        {cat.IsArchive ? "Đã lưu trữ" : "Hoạt động"}
+                      </span>
+                    </td>
+                    <td
+                      style={{ textAlign: "center", verticalAlign: "middle" }}
+                    >
+                      <div className="d-flex gap-1 justify-content-center">
+                        <button
+                          className="btn btn-sm btn-success"
+                          onClick={() =>
+                            navigate(`/categories/edit/${cat.CategoryID}`)
+                          }
+                          title="Sửa"
+                        >
+                          <FaEdit />
+                        </button>
+                        {cat.IsArchive ? (
+                          <button
+                            className="btn btn-sm btn-warning"
+                            onClick={() => handleRestore(cat.CategoryID)}
+                            title="Khôi phục"
+                          >
+                            <FaUndo />
+                          </button>
+                        ) : (
+                          <button
+                            className="btn btn-sm btn-danger"
+                            onClick={() => handleDelete(cat.CategoryID)}
+                            title="Xóa"
+                          >
+                            <FaTrash />
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="text-center text-muted">
+                    Không có dữ liệu
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
 

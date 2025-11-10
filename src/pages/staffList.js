@@ -7,7 +7,7 @@ const StaffList = () => {
   const [employees, setEmployees] = useState([]);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(2);
+  const [itemsPerPage] = useState(5);
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [activities, setActivities] = useState([]);
@@ -99,7 +99,7 @@ const StaffList = () => {
         )
       );
 
-      showAlert("Đã thay đổi trạng thái nhân viên.", "success");
+      // showAlert("Đã thay đổi trạng thái nhân viên.", "success");
     } catch (error) {
       console.error("Lỗi toggle:", error.response?.data || error.message);
       showAlert("Không thể thay đổi trạng thái nhân viên.", "danger");
@@ -226,7 +226,7 @@ const StaffList = () => {
       )}
 
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="fw-bold m-0">Danh sách nhân viên</h2>
+        <h2 className="fw-bold mt-5">Danh sách nhân viên</h2>
         <div className="input-group" style={{ maxWidth: "300px" }}>
           <span className="input-group-text bg-light">
             <Search size={18} />

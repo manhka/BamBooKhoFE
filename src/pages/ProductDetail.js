@@ -1,6 +1,3 @@
-// ProductDetail.js
-"use client";
-
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { getProductByBarcode } from "../services/productService";

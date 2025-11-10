@@ -1,55 +1,21 @@
 import React, { useState } from "react";
-import axios from "axios";
-import * as XLSX from "xlsx";
-import { saveAs } from "file-saver";
 import { Container, Row, Col, Table, Form, Button } from "react-bootstrap";
-import { Search, FileDown, Upload } from "lucide-react";
-
+import { Search, FileDown } from "lucide-react";
+import * as XLSX from "xlsx";
+import {
+  getQuarterReport,
+  exportQuarterReport,
+} from "../services/reportService";
 const Report = () => {
   const [quarter, setQuarter] = useState("");
   const [year, setYear] = useState(new Date().getFullYear());
   const [data, setData] = useState([]);
-
   const handleFetch = async () => {
-    if (!quarter || !year) return alert("Chọn quý và năm!");
     try {
-      const res = await axios.get("http://localhost:3000/api/report/quarter", {
-        params: { quarter, year },
-      });
-
-      const allRows = [];
-
-      res.data.imports?.forEach((imp) => {
-        imp.ImportDetails.forEach((d) => {
-          allRows.push({
-            Type: "Nhập hàng",
-            Date: imp.ImportDate,
-            Product: d.Product.ProductName,
-            Quantity: d.Quantity,
-            UnitPrice: d.UnitPrice,
-            Total: d.Total,
-            Partner: imp.Supplier?.SupplierName,
-          });
-        });
-      });
-
-      res.data.exports?.forEach((exp) => {
-        exp.ExportDetails.forEach((d) => {
-          allRows.push({
-            Type: "Xuất hàng",
-            Date: exp.ExportDate,
-            Product: d.Product.ProductName,
-            Quantity: d.Quantity,
-            UnitPrice: d.UnitPrice,
-            Total: d.Total,
-            Partner: exp.Customer?.CustomerName,
-          });
-        });
-      });
-      setData(allRows);
+      const rows = await getQuarterReport({ quarter, year });
+      setData(rows);
     } catch (err) {
-      console.error(err);
-      alert("Lỗi khi lấy dữ liệu!");
+      alert(err.message || "Lỗi khi lấy dữ liệu báo cáo!");
     }
   };
 
@@ -63,32 +29,31 @@ const Report = () => {
       const wsname = wb.SheetNames[0];
       const ws = wb.Sheets[wsname];
       const jsonData = XLSX.utils.sheet_to_json(ws, { defval: "", range: 1 });
-
       setData(jsonData);
     };
     reader.readAsBinaryString(file);
   };
 
   const handleExportExcel = async () => {
-    if (!quarter || !year) return alert("Vui lòng chọn quý và năm để xuất!");
-
     try {
-      const res = await axios.get(
-        "http://localhost:3000/api/report/export-quarter",
-        {
-          params: { quarter, year },
-          responseType: "blob",
-        }
-      );
-      saveAs(res.data, `BaoCao_Q${quarter}_${year}.xlsx`);
+      await exportQuarterReport({ quarter, year });
     } catch (err) {
-      console.error("Lỗi khi xuất Excel:", err);
-      alert("Không thể xuất file Excel!");
+      alert(err.message || "Không thể xuất file Excel!");
     }
   };
 
+  // Tính tổng tiền
+  const totalAmount = data.reduce((sum, row) => {
+    const value = parseFloat(row.Total.replace(/\D/g, "")) || 0;
+    return sum + value;
+  }, 0);
+
+  // Format tiền
+  const formatCurrency = (value) =>
+    value != null ? value.toLocaleString("vi-VN") + "₫" : "";
+
   return (
-    <Container className="mt-4">
+    <Container className="mt-5">
       <h4 className="mb-3 text-center">Báo cáo nhập - xuất hàng</h4>
 
       <Row className="mb-3">
@@ -141,7 +106,7 @@ const Report = () => {
         <thead className="table-primary">
           <tr>
             <th>Loại</th>
-            <th>Ngày</th>
+            <th>Thời gian</th>
             <th>Sản Phẩm</th>
             <th>Số Lượng</th>
             <th>Đơn Giá</th>
@@ -159,13 +124,28 @@ const Report = () => {
           ) : (
             data.map((row, idx) => (
               <tr key={idx}>
-                {Object.values(row).map((val, j) => (
-                  <td key={j}>{val}</td>
-                ))}
+                <td>{row.Type}</td>
+                <td>{row.Date}</td>
+                <td>{row.Product}</td>
+                <td>{row.Quantity}</td>
+                <td>{row.UnitPrice}</td>
+                <td>{row.Total}</td>
+                <td>{row.Partner}</td>
               </tr>
             ))
           )}
         </tbody>
+        {data.length > 0 && (
+          <tfoot>
+            <tr className="table-success fw-bold">
+              <td colSpan={5} className="text-end">
+                Tổng cộng:
+              </td>
+              <td>{formatCurrency(totalAmount)}</td>
+              <td></td>
+            </tr>
+          </tfoot>
+        )}
       </Table>
     </Container>
   );

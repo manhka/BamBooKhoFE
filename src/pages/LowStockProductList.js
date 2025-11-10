@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import { FaEye } from "react-icons/fa";
 import { getListStockWarningProducts } from "../services/productService";
 import { getAllBrands } from "../services/brandService";
 import { getAllCategories } from "../services/categoryService";

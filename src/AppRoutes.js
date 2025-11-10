@@ -8,6 +8,11 @@ import Report from "./pages/Report";
 import Activity from "./pages/ActivityList";
 import StaffList from "./pages/staffList";
 import ProductList from "./pages/ProductList";
+import ImportUploadPage from "./pages/ImportUploadPage/ImportUploadPage";
+import ImportHistoryPage from "./pages/ImportHistoryPage/ImportHistoryPage";
+import ExportCreatePage from "./pages/ExportCreatePage/ExportCreatePage";
+import ExportHistoryPage from "./pages/ExportHistoryPage/ExportHistoryPage";
+import ExportOrderDetailPage from "./pages/ExportOrderDetailPage/ExportOrderDetailPage";
 import LowStockProductList from "./pages/LowStockProductList";
 import CategoryList from "./pages/CategoryList";
 import CategoryAdd from "./pages/CategoryAdd";
@@ -31,6 +36,7 @@ const AppRoutes = () => (
       <Route path="/register" element={<RegisterPage />} />
       <Route path="*" element={<LoginPage />} />
       <Route path="dashboard" element={<Dashboard />} />
+      <Route path="product-list" element={<ProductList />} />
       <Route path="categories" element={<CategoryList />} />
       <Route path="categories/add" element={<CategoryAdd />} />
       <Route path="categories/edit/:id" element={<CategoryEdit />} />
@@ -52,7 +58,12 @@ const AppRoutes = () => (
       />
       <Route path="/report" element={<Report />} />
       <Route path="/staffList" element={<StaffList />} />
-      <Route path="/activityList" element={<Activity />} />
+      <Route path="/activities" element={<Activity />} />
+      <Route path="import" element={<ImportUploadPage />} />
+      <Route path="import-history" element={<ImportHistoryPage />} />
+      <Route path="export" element={<ExportCreatePage />} />
+      <Route path="export-history" element={<ExportHistoryPage />} />
+      <Route path="export-detail/:id" element={<ExportOrderDetailPage />} />
       <Route
         path="products/customer-rechange"
         element={<ProductWarrantyCheck />}

@@ -1,8 +1,6 @@
 import api from "./api";
 import { API_ENDPOINTS } from "../constants/api";
 
-const API_URL = "http://localhost:3001/api/auth";
-
 export const login = async (username, password) => {
   try {
     const res = await api.post(API_ENDPOINTS.AUTH.LOGIN, {
@@ -28,7 +26,7 @@ export const register = async (
       API_ENDPOINTS.AUTH.REGISTER,
       { username, password, phone, roleId },
       {
-        headers: {  
+        headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },

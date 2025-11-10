@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Menu } from "lucide-react";
+
 export default function AppLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ export default function AppLayout() {
   return (
     <div className="d-flex" style={{ minHeight: "100vh", overflow: "hidden" }}>
       {/* ===== Sidebar ===== */}
-      <Sidebar isOpen={isSidebarOpen} onLogout={handleLogout}/>
+      <Sidebar isOpen={isSidebarOpen} onLogout={handleLogout} />
 
       {/* ===== Main content ===== */}
       <div

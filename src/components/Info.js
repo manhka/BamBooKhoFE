@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import {
   Boxes,
   AlertTriangle,
-  DollarSign,
   BarChart3,
   ArrowDownCircle,
   ArrowUpCircle,
@@ -127,7 +126,7 @@ export default function Info() {
             color: "white",
             borderRadius: "10px",
           }}
-          onClick={() => navigate("/warehouse/import")}
+          onClick={() => navigate("/import")}
         >
           <ArrowDownCircle size={16} /> Nhập hàng
         </button>
@@ -139,7 +138,7 @@ export default function Info() {
             color: "white",
             borderRadius: "10px",
           }}
-          onClick={() => navigate("/warehouse/export")}
+          onClick={() => navigate("/export")}
         >
           <ArrowUpCircle size={16} /> Xuất hàng
         </button>
