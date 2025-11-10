@@ -1,0 +1,222 @@
+:root {
+  --color-primary: #007bff;
+  --color-primary-hover: #0056b3;
+  --color-secondary: #f0f2f5;
+  --color-secondary-hover: #e4e6eb;
+  --color-text: #212529;
+  --color-text-secondary: #6c757d;
+  --color-border: #dee2e6;
+  --color-background: #ffffff;
+  --color-error-bg: #fdf2f2;
+  --color-error-text: #d93025;
+  --color-error-border: #f6cccc;
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.65); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  overflow-y: auto;
+  backdrop-filter: blur(3px); 
+}
+
+.modalContent {
+  background: var(--color-background);
+  border-radius: 12px; 
+  width: 550px;
+  max-width: 95%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); 
+  animation: slideDownFadeIn 0.3s ease-out;
+  margin: 2rem 0;
+  overflow: hidden; 
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.modalTitle {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; 
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.titleIcon {
+  position: relative;
+  top: -1px;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  border-radius: 50%;
+  padding: 0.25rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.closeButton:hover {
+  background-color: var(--color-secondary);
+  color: var(--color-text);
+}
+
+.closeButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.modalBody {
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.formLabel {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.requiredMark {
+  color: var(--color-error-text);
+  margin-left: 0.25rem;
+}
+
+.formInput {
+  display: block;
+  width: 100%;
+  padding: 0.8rem 1rem; /* Tăng padding bên trong */
+  font-size: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px; /* Bo tròn nhẹ */
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.formInput:focus {
+  border-color: var(--color-primary);
+  outline: 0;
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.15); 
+}
+
+.formInput::placeholder {
+  color: #999;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1.25rem 1.75rem;
+  background-color: #f9f9f9; 
+  border-top: 1px solid var(--color-border);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.buttonIcon {
+  margin-right: 0.5rem;
+}
+
+.buttonPrimary {
+  background-color: var(--color-primary);
+  color: white;
+}
+.buttonPrimary:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+}
+
+.buttonSecondary {
+  background-color: var(--color-secondary);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+.buttonSecondary:hover:not(:disabled) {
+  background-color: var(--color-secondary-hover);
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.errorMessage {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--color-error-text);
+  background-color: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
+  padding: 0.75rem 1.25rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.errorIcon {
+  flex-shrink: 0;
+}
+
+.spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 0.2em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spinner-border 0.75s linear infinite;
+  margin-right: 0.5rem;
+}
+
+@keyframes spinner-border {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes slideDownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

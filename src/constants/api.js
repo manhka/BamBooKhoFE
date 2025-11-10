@@ -8,6 +8,7 @@ export const API_ENDPOINTS = {
   PRODUCTS: {
     LIST: "/products",
     DETAIL: (barcode) => `/products/details/${barcode}`,
+    ALL_FOR_LOOKUP: '/products/all-for-lookup',
     CREATE: "/products/create",
     UPDATE: (barcode) => `/products/update/${barcode}`,
     ARCHIVE: (barcode) => `/products/archive/${barcode}`,
@@ -44,4 +45,33 @@ export const API_ENDPOINTS = {
     LIST: "/customer-return/list",
     DETAIL: (id) => `/customer-return/detail/${id}`,
   },
-};
+
+  IMPORT: {
+    UPLOAD: "/import-orders/upload",
+    LIST: "/import-orders",
+    DETAIL: (id) => `/import-orders/${id}`,
+  },
+
+  SUPPLIERS: {
+    LIST: "/suppliers",
+  },
+
+  USERS: {
+    LIST: "/users", 
+  },
+
+  EXPORT: {
+    CREATE: "/export-orders",       
+    LIST: "/export-orders",       
+    DETAIL: (id) => `/export-orders/${id}`, 
+    DOWNLOAD_EXCEL: (id) => `/export-orders/${id}/excel`,
+  },
+
+  CUSTOMERS: {
+    LIST: "/customers", 
+    CREATE: "/customers",
+    DETAIL: '/customers/detail/:id', 
+    UPDATE: '/customers/update/:id',
+  }
+
+}

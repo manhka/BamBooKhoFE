@@ -8,6 +8,9 @@ import {
   LogOut,
   ChevronDown,
   ShoppingCart,
+  ArrowDownSquare, 
+  ArrowUpSquare,
+  History
   Layers,
   Tag,
   LogIn,
@@ -94,7 +97,30 @@ export default function Sidebar({ isOpen, onLogout, onSelectPage }) {
       icon: Settings,
       path: "/settings",
     },
+
+    {
+      id: "import", 
+      label: "Nhập Kho",
+      icon: ArrowDownSquare, 
+      submenu: [
+        { label: "Nhập từ Excel", path: "/import-upload" }, 
+        { label: "Lịch sử nhập", path: "/import-history" }, 
+      ],
+    },
+
+    {
+      id: "export",
+      label: "Xuất Kho",
+      icon: ArrowUpSquare,
+      submenu: [
+        { label: "Tạo Phiếu Xuất", path: "/export-create" },
+        { label: "Lịch Sử Xuất", path: "/export-history" },
+      ],
+    },
+
   ];
+
+  
 
   return (
     <aside

@@ -8,6 +8,11 @@ import Report from "./pages/Report";
 import Activity from "./pages/ActivityList";
 import StaffList from "./pages/staffList";
 import ProductList from "./pages/ProductList";
+import ImportUploadPage from "./pages/ImportUploadPage/ImportUploadPage";
+import ImportHistoryPage from "./pages/ImportHistoryPage/ImportHistoryPage";
+import ExportCreatePage from "./pages/ExportCreatePage/ExportCreatePage";
+import ExportHistoryPage from "./pages/ExportHistoryPage/ExportHistoryPage";
+import ExportOrderDetailPage from "./pages/ExportOrderDetailPage/ExportOrderDetailPage";
 import CategoryList from "./pages/CategoryList";
 import CategoryAdd from "./pages/CategoryAdd";
 import CategoryEdit from "./pages/CategoryEdit";
@@ -32,6 +37,11 @@ const AppRoutes = () => (
       <Route path="*" element={<LoginPage />} />
       <Route path="dashboard" element={<Dashboard />} />
       <Route path="product-list" element={<ProductList />} />
+      <Route path="import-upload" element={<ImportUploadPage />} />
+      <Route path="import-history" element={<ImportHistoryPage />} />
+      <Route path="export-create" element={<ExportCreatePage />} />
+      <Route path="export-history" element={<ExportHistoryPage />} />
+      <Route path="export-detail/:id" element={<ExportOrderDetailPage />} />
       <Route path="categories" element={<CategoryList />} />
       <Route path="categories/add" element={<CategoryAdd />} />
       <Route path="categories/edit/:id" element={<CategoryEdit />} />

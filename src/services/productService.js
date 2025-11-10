@@ -18,6 +18,16 @@ export const getProducts = async (filters = {}) => {
     throw error.response?.data || { message: error.message };
   }
 };
+
+export const getProductsForLookup = async () => { 
+    try {
+        const endpoint = API_ENDPOINTS.PRODUCTS.ALL_FOR_LOOKUP; 
+        const response = await api.get(endpoint);
+        return response.data; 
+    } catch (error) {
+        console.error("Get Products For Lookup error:", error.response?.data || error.message);
+        throw error.response?.data || { message: error.message };
+    }
 export const createProduct = async (productData) => {
   try {
     const res = await api.post(API_ENDPOINTS.PRODUCTS.CREATE, productData);

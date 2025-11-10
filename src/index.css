@@ -1,3 +1,6 @@
+@import "react-datepicker/dist/react-datepicker.css";
+@import "react-toastify/dist/ReactToastify.css";
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -7,7 +10,54 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.react-datepicker-popper {
+  z-index: 1050 !important;
+}
+
+.react-datepicker__tab-loop {
+  position: absolute;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.react-datepicker__header {
+  background-color: #f0f7ff; 
+  border-bottom: 1px solid #cce0ff;
+}
+
+.react-datepicker__current-month {
+  color: #004a99;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.react-datepicker__day-name {
+  color: #004a99;
+  font-weight: 500;
+}
+
+.react-datepicker__navigation-icon::before {
+  border-color: #007bff;
+  border-width: 2px 2px 0 0;
+}
+
+.react-datepicker__day--selected {
+  background-color: #007bff; 
+  color: white;
+}
+.react-datepicker__day--selected:hover {
+  background-color: #0056b3; 
+}
+
+.react-datepicker__day--today {
+  font-weight: bold;
+  background-color: #e6f2ff; 
+}
+
+.react-datepicker__day:hover {
+  background-color: #f0f7ff;
+  border-radius: 50%;
 }
