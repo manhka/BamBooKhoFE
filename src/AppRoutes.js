@@ -25,48 +25,232 @@ import UpdateProduct from "./pages/UpdateProduct";
 import ProductDetail from "./pages/ProductDetail";
 import ProductWarrantyCheck from "./pages/ProductWarrantyCheck";
 import CustomerReturn from "./pages/CustomerReturn";
+import StaffDashboard from "./pages/StaffDashboard";
 import CustomerReturnList from "./pages/CustomerReturnList";
-
+import Error400 from "./pages/ERROR/Error400";
+import Error401 from "./pages/ERROR/Error401";
+import Error403 from "./pages/ERROR/Error403";
+import Error500 from "./pages/ERROR/Error500";
+import Error404 from "./pages/ERROR/Error404";
+import ProtectedRoute from "./components/ProtectedRoute ";
 const AppRoutes = () => (
   <Routes>
-    <Route path="/" element={<LoginPage />} />{" "}
-    <Route path="*" element={<LoginPage />} />{" "}
+    <Route path="/" element={<LoginPage />} />
+    <Route path="/login" element={<LoginPage />} />
+    <Route path="/error/400" element={<Error400 />} />
+    <Route path="/error/401" element={<Error401 />} />
+    <Route path="/error/403" element={<Error403 />} />
+    <Route path="/error/404" element={<Error404 />} />
+    <Route path="*" element={<Error404 />} />
+    <Route path="/error/500" element={<Error500 />} />
     <Route path="/" element={<AppLayout />}>
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route path="*" element={<LoginPage />} />
-      <Route path="dashboard" element={<Dashboard />} />
-      <Route path="product-list" element={<ProductList />} />
-      <Route path="categories" element={<CategoryList />} />
-      <Route path="categories/add" element={<CategoryAdd />} />
-      <Route path="categories/edit/:id" element={<CategoryEdit />} />
-      <Route path="brands" element={<BrandList />} />
-      <Route path="brands/add" element={<BrandAdd />} />
-      <Route path="brands/edit/:id" element={<BrandEdit />} />
-      <Route path="products/list" element={<ProductList />} />
       <Route
-        path="products/stock/list-warning"
-        element={<LowStockProductList />}
+        path="/register"
+        element={
+          <ProtectedRoute requiredRole={1}>
+            <RegisterPage />
+          </ProtectedRoute>
+        }
       />
-      <Route path="products/add" element={<AddProduct />} />
-      <Route path="products/update/:barcode" element={<UpdateProduct />} />
-      <Route path="products/details/:barcode" element={<ProductDetail />} />
-      <Route path="customer-return/list" element={<CustomerReturnList />} />
+      <Route
+        path="/admin/dashboard"
+        element={
+          <ProtectedRoute requiredRole={1}>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/staff/dashboard"
+        element={
+          <ProtectedRoute requiredRole={2}>
+            <StaffDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/product-list"
+        element={
+          <ProtectedRoute requiredRole={2}>
+            <ProductList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/categories"
+        element={
+          <ProtectedRoute requiredRole={2}>
+            <CategoryList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/categories/add"
+        element={
+          <ProtectedRoute requiredRole={2}>
+            <CategoryAdd />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/categories/edit/:id"
+        element={
+          <ProtectedRoute requiredRole={2}>
+            <CategoryEdit />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/brands"
+        element={
+          <ProtectedRoute requiredRole={2}>
+            <BrandList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/brands/add"
+        element={
+          <ProtectedRoute requiredRole={2}>
+            <BrandAdd />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/brands/edit/:id"
+        element={
+          <ProtectedRoute requiredRole={2}>
+            <BrandEdit />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/products/list"
+        element={
+          <ProtectedRoute requiredRole={2}>
+            <ProductList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/products/stock/list-warning"
+        element={
+          <ProtectedRoute requiredRole={2}>
+            <LowStockProductList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/products/add"
+        element={
+          <ProtectedRoute requiredRole={2}>
+            <AddProduct />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/products/update/:barcode"
+        element={
+          <ProtectedRoute requiredRole={2}>
+            <UpdateProduct />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/products/details/:barcode"
+        element={
+          <ProtectedRoute requiredRole={2}>
+            <ProductDetail />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/customer-return/list"
+        element={
+          <ProtectedRoute requiredRole={2}>
+            <CustomerReturnList />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="customer-return/:exportDetailId"
-        element={<CustomerReturn />}
+        element={
+          <ProtectedRoute requiredRole={2}>
+            <CustomerReturn />
+          </ProtectedRoute>
+        }
       />
-      <Route path="/report" element={<Report />} />
-      <Route path="/staffList" element={<StaffList />} />
-      <Route path="/activities" element={<Activity />} />
-      <Route path="import" element={<ImportUploadPage />} />
-      <Route path="import-history" element={<ImportHistoryPage />} />
-      <Route path="export" element={<ExportCreatePage />} />
-      <Route path="export-history" element={<ExportHistoryPage />} />
-      <Route path="export-detail/:id" element={<ExportOrderDetailPage />} />
       <Route
-        path="products/customer-rechange"
-        element={<ProductWarrantyCheck />}
+        path="/report"
+        element={
+          <ProtectedRoute requiredRole={1}>
+            <Report />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/staffList"
+        element={
+          <ProtectedRoute requiredRole={1}>
+            <StaffList />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/activities"
+        element={
+          <ProtectedRoute requiredRole={1}>
+            <Activity />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/import"
+        element={
+          <ProtectedRoute requiredRole={2}>
+            <ImportUploadPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/import-history"
+        element={
+          <ProtectedRoute requiredRole={2}>
+            <ImportHistoryPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/export"
+        element={
+          <ProtectedRoute requiredRole={2}>
+            <ExportCreatePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/export-history"
+        element={
+          <ProtectedRoute requiredRole={2}>
+            <ExportHistoryPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/export-detail/:id"
+        element={
+          <ProtectedRoute requiredRole={2}>
+            <ExportOrderDetailPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/products/customer-rechange"
+        element={
+          <ProtectedRoute requiredRole={2}>
+            <ProductWarrantyCheck />
+          </ProtectedRoute>
+        }
       />
     </Route>
   </Routes>

@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { createBrand } from "../services/brandService";
 import { useNavigate } from "react-router-dom";
+import { showAlert } from "../utils/toast";
+import { useApiWithErrorRedirect } from "../hooks/useApiWithErrorRedirect";
 
 const BrandAdd = () => {
+  const { callApi } = useApiWithErrorRedirect(); // thêm hook
+
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     BrandName: "",
@@ -38,13 +42,13 @@ const BrandAdd = () => {
 
     setLoading(true);
     try {
-      await createBrand(formData);
-      alert("Thêm thương hiệu thành công!");
+      await callApi(() => createBrand(formData));
+      showAlert("Thêm thương hiệu thành công!", "success");
       navigate("/brands");
     } catch (error) {
       const errorMessage =
         error.response?.data?.message || "Lỗi khi thêm thương hiệu";
-      alert(errorMessage);
+      showAlert(errorMessage, "danger");
     } finally {
       setLoading(false);
     }

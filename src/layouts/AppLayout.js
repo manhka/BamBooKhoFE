@@ -2,16 +2,20 @@ import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Menu } from "lucide-react";
+import AppToast from "../components/AppToast";
 
 export default function AppLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const navigate = useNavigate();
   const handleLogout = () => {
+    localStorage.removeItem("token");
     localStorage.removeItem("user");
     navigate("/login");
   };
   return (
     <div className="d-flex" style={{ minHeight: "100vh", overflow: "hidden" }}>
+      <AppToast />
+
       {/* ===== Sidebar ===== */}
       <Sidebar isOpen={isSidebarOpen} onLogout={handleLogout} />
 

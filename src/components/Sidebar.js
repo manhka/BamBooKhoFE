@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState } from "react";
 import {
   Users,
@@ -23,23 +21,37 @@ export default function Sidebar({ isOpen, onLogout, onSelectPage }) {
   const location = useLocation();
   const currentPath = location.pathname;
 
+  const userData = localStorage.getItem("user");
+  const roleID = userData ? Number(JSON.parse(userData).roleID) : null;
+  const userName = userData ? JSON.parse(userData).username : "User";
+
   const menuItems = [
     {
-      id: "dashboard",
+      id: "dashboard-admin",
       label: "Dashboard",
       icon: BarChart3,
-      path: "/dashboard",
+      path: "/admin/dashboard",
+      roles: [1],
+    },
+    {
+      id: "dashboard-staff",
+      label: "Dashboard",
+      icon: BarChart3,
+      path: "/staff/dashboard",
+      roles: [2],
     },
     {
       id: "report",
-      label: "Report",
+      label: "Báo cáo",
       icon: FileText,
       path: "/report",
+      roles: [1],
     },
     {
       id: "employees",
-      label: "Nhân Viên",
+      label: "Nhân viên",
       icon: Users,
+      roles: [1],
       submenu: [
         { label: "Tất cả nhân viên", path: "/staffList" },
         { label: "Thêm nhân viên", path: "/register" },
@@ -49,36 +61,27 @@ export default function Sidebar({ isOpen, onLogout, onSelectPage }) {
       id: "products",
       label: "Sản phẩm",
       icon: ShoppingCart,
+      roles: [2],
       submenu: [
-        { label: "Danh sách sản phẩm", path: "products/list" },
-        { label: "Thêm sản phẩm mới", path: "products/add" },
+        { label: "Danh sách sản phẩm", path: "/products/list" },
+        { label: "Thêm sản phẩm mới", path: "/products/add" },
       ],
-    },
-    {
-      id: "activities",
-      label: "Hoạt động",
-      icon: Activity,
-      submenu: [{ label: "Danh sách hoạt động", path: "/activities" }],
     },
     {
       id: "change-products",
       label: "Đổi trả sản phẩm",
       icon: RefreshCcw,
+      roles: [2],
       submenu: [
-        {
-          label: "Khách hàng đổi trả sản phẩm",
-          path: "products/customer-rechange",
-        },
-        {
-          label: "Danh sách đổi trả hàng",
-          path: "customer-return/list",
-        },
+        { label: "Khách hàng đổi trả", path: "/products/customer-rechange" },
+        { label: "Danh sách đổi trả", path: "/customer-return/list" },
       ],
     },
     {
       id: "categories",
       label: "Danh mục",
       icon: Layers,
+      roles: [2],
       submenu: [
         { label: "Danh sách danh mục", path: "/categories" },
         { label: "Thêm danh mục", path: "/categories/add" },
@@ -88,28 +91,29 @@ export default function Sidebar({ isOpen, onLogout, onSelectPage }) {
       id: "brands",
       label: "Thương hiệu",
       icon: Tag,
+      roles: [2],
       submenu: [
         { label: "Danh sách thương hiệu", path: "/brands" },
         { label: "Thêm thương hiệu", path: "/brands/add" },
       ],
     },
-
     {
       id: "import",
       label: "Nhập kho",
       icon: ArrowDownSquare,
+      roles: [2],
       submenu: [
         { label: "Nhập hàng", path: "/import" },
         { label: "Lịch sử nhập hàng", path: "/import-history" },
       ],
     },
-
     {
       id: "export",
       label: "Xuất kho",
       icon: ArrowUpSquare,
+      roles: [2],
       submenu: [
-        { label: "Xuất Hàng", path: "/export" },
+        { label: "Xuất hàng", path: "/export" },
         { label: "Lịch sử xuất hàng", path: "/export-history" },
       ],
     },
@@ -142,77 +146,67 @@ export default function Sidebar({ isOpen, onLogout, onSelectPage }) {
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
           </div>
-          <span className="fw-semibold fs-5 text-secondary">Admin</span>
+          <span className="fw-bold text-dark" style={{ fontSize: "1rem" }}>
+            {userName}
+          </span>{" "}
         </div>
 
         {/* Menu */}
         <ul className="nav flex-column" style={{ gap: "6px" }}>
-          {menuItems.map((item) => (
-            <li key={item.id} className="nav-item">
-              {/* --- Mục chính --- */}
-              <button
-                onClick={() => {
-                  if (item.submenu) {
-                    setExpandedMenu(expandedMenu === item.id ? null : item.id);
-                  } else if (item.path) {
-                    navigate(item.path);
-                  }
-                }}
-                className="nav-link d-flex align-items-center gap-2 py-2 px-3 rounded w-100 text-start border-0"
-                style={{
-                  color: "#334155",
-                  fontWeight: 500,
-                  transition: "all 0.2s ease",
-                }}
-              >
-                <item.icon size={18} />
-                <span>{item.label}</span>
+          {menuItems
+            .filter((item) => !item.roles || item.roles.includes(roleID))
+            .map((item) => (
+              <li key={item.id} className="nav-item">
+                <button
+                  onClick={() => {
+                    if (item.submenu) {
+                      setExpandedMenu(
+                        expandedMenu === item.id ? null : item.id
+                      );
+                    } else if (item.path) {
+                      navigate(item.path);
+                    }
+                  }}
+                  className="nav-link d-flex align-items-center gap-2 py-2 px-3 rounded w-100 text-start border-0"
+                  style={{
+                    color: "#334155",
+                    fontWeight: 500,
+                    transition: "all 0.2s ease",
+                  }}
+                >
+                  <item.icon size={18} />
+                  <span>{item.label}</span>
+                  {item.submenu && (
+                    <ChevronDown
+                      size={16}
+                      className={`ms-auto ${
+                        expandedMenu === item.id ? "rotate-180" : ""
+                      }`}
+                    />
+                  )}
+                </button>
 
-                {item.submenu && (
-                  <ChevronDown
-                    size={16}
-                    className={`ms-auto transition-transform ${
-                      expandedMenu === item.id ? "rotate-180" : ""
-                    }`}
-                  />
-                )}
-              </button>
-
-              {/* --- Submenu --- */}
-              {item.submenu &&
-                expandedMenu === item.id &&
-                item.submenu.map((sub, idx) => {
-                  const isSubActive = sub.path === currentPath || false;
-                  return (
-                    <button
-                      key={idx}
-                      onClick={() => {
-                        if (sub.path) navigate(sub.path);
-                        else if (sub.page) onSelectPage(sub.page);
-                      }}
-                      className="btn w-100 text-start ps-5 py-1 small border-0"
-                      style={{
-                        color: isSubActive ? "#1e293b" : "#64748b",
-                        backgroundColor: isSubActive
-                          ? "#e2e8f0"
-                          : "transparent",
-                        transition: "all 0.2s ease",
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isSubActive)
-                          e.currentTarget.style.background = "#f1f5f9";
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isSubActive)
-                          e.currentTarget.style.background = "transparent";
-                      }}
-                    >
-                      • {sub.label}
-                    </button>
-                  );
-                })}
-            </li>
-          ))}
+                {item.submenu &&
+                  expandedMenu === item.id &&
+                  item.submenu.map((sub, idx) => {
+                    const isActive = sub.path === currentPath;
+                    return (
+                      <button
+                        key={idx}
+                        onClick={() => navigate(sub.path)}
+                        className="btn w-100 text-start ps-5 py-1 small border-0"
+                        style={{
+                          color: isActive ? "#1e293b" : "#64748b",
+                          backgroundColor: isActive ? "#e2e8f0" : "transparent",
+                          transition: "all 0.2s ease",
+                        }}
+                      >
+                        • {sub.label}
+                      </button>
+                    );
+                  })}
+              </li>
+            ))}
         </ul>
 
         {/* Logout */}
@@ -226,7 +220,6 @@ export default function Sidebar({ isOpen, onLogout, onSelectPage }) {
             border: "none",
             borderRadius: "8px",
             padding: "8px 12px",
-            transition: "background 0.2s ease",
           }}
         >
           <LogOut size={18} />

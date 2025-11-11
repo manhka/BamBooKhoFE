@@ -1,6 +1,7 @@
 import api from "./api";
 import { API_ENDPOINTS } from "../constants/api";
 import { saveAs } from "file-saver";
+import { showAlert } from "../utils/toast";
 
 // Hàm format ngày giờ
 const formatDateTime = (dateString) => {
@@ -29,7 +30,10 @@ const formatCurrency = (value) => {
 
 // Service lấy báo cáo theo quý
 export const getQuarterReport = async ({ quarter, year }) => {
-  if (!quarter || !year) throw new Error("Chọn quý và năm!");
+  if (!quarter || !year) {
+    showAlert("Chọn quý và năm!", "danger");
+    return;
+  }
 
   try {
     const res = await api.get(API_ENDPOINTS.REPORTS.QUARTER, {
@@ -79,7 +83,10 @@ export const getQuarterReport = async ({ quarter, year }) => {
 };
 
 export const exportQuarterReport = async ({ quarter, year }) => {
-  if (!quarter || !year) throw new Error("Vui lòng chọn quý và năm!");
+  if (!quarter || !year) {
+    showAlert("Chọn quý và năm!", "danger");
+    return;
+  }
 
   try {
     const res = await api.get(API_ENDPOINTS.REPORTS.EXPORT_QUARTER, {

@@ -59,6 +59,9 @@ export const API_ENDPOINTS = {
 
   USERS: {
     LIST: "/users",
+    BY_ROLE: "/users/role",
+    TOGGLE: "/users/toggle",
+    EDIT: "/users/edit",
   },
 
   EXPORT: {
@@ -80,5 +83,15 @@ export const API_ENDPOINTS = {
     QUARTER: "/report/quarter",
     EXPORT_QUARTERLY: "/report/export-quarter",
     EXPORT_QUARTER: "/report/export-quarter",
+  },
+  STAFF: {
+    QUARTER: "/report/quarter",
+    EXPORT_QUARTERLY: "/report/export-quarter",
+    EXPORT_QUARTER: "/report/export-quarter",
+  },
+  ACTIVITIES: {
+    BY_STAFF: "/activities/staff-activities",
+    VIEW_ALL: "/activities/view",
+    ASSIGN: "/activities/staff-activities",
   },
 };

@@ -5,8 +5,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getAllCategories } from "../services/categoryService";
 import { getAllBrands } from "../services/brandService";
 import { getProductByBarcode, updateProduct } from "../services/productService";
+import { useApiWithErrorRedirect } from "../hooks/useApiWithErrorRedirect";
 
 export default function UpdateProduct() {
+  const { callApi } = useApiWithErrorRedirect();
   const { barcode } = useParams();
   const navigate = useNavigate();
 
@@ -97,7 +99,7 @@ export default function UpdateProduct() {
       ...product,
       Variants: variants,
     };
-    await updateProduct(product.BarcodeProduct, updated);
+    await callApi(() => updateProduct(product.BarcodeProduct, updated));
     navigate("/products/list");
   };
 

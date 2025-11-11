@@ -17,12 +17,7 @@
   margin-top: 5rem !important; 
 }
 
-.pageTitle {
-  font-size: 2rem;
-  font-weight: 600;
-  margin-bottom: 1.5rem;
-  color: var(--color-text);
-}
+
 
 .card {
   background-color: var(--color-background);

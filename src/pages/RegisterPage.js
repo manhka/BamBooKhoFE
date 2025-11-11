@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import { register } from "../services/authService";
 import { Eye, EyeOff } from "lucide-react";
 import BackButton from "../components/BackButton";
+import { useApiWithErrorRedirect } from "../hooks/useApiWithErrorRedirect";
 
 const RegisterPage = () => {
+  const { callApi } = useApiWithErrorRedirect();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
@@ -14,7 +17,9 @@ const RegisterPage = () => {
   const validateInput = () => {
     const usernameRegex = /^\S{3,}$/;
     if (!usernameRegex.test(username)) {
-      setError("⚠️ Tên đăng nhập phải có ít nhất 3 ký tự và không chứa dấu cách.");
+      setError(
+        "⚠️ Tên đăng nhập phải có ít nhất 3 ký tự và không chứa dấu cách."
+      );
       return false;
     }
 
@@ -25,7 +30,9 @@ const RegisterPage = () => {
 
     const phoneRegex = /^0\d{9}$/;
     if (!phoneRegex.test(phone)) {
-      setError("⚠️ Số điện thoại không hợp lệ. (Phải là 10 số, bắt đầu bằng 0).");
+      setError(
+        "⚠️ Số điện thoại không hợp lệ. (Phải là 10 số, bắt đầu bằng 0)."
+      );
       return false;
     }
 
@@ -46,7 +53,7 @@ const RegisterPage = () => {
         return;
       }
 
-      await register(username, password, phone, 1, token);
+      await callApi(register, username, password, phone, 1, token);
       setSuccess("✅ Đăng ký nhân viên thành công!");
       setUsername("");
       setPassword("");
@@ -169,7 +176,9 @@ const RegisterPage = () => {
 
             {/* Error / Success */}
             {error && (
-              <p style={{ color: "red", fontSize: "14px", marginBottom: "10px" }}>
+              <p
+                style={{ color: "red", fontSize: "14px", marginBottom: "10px" }}
+              >
                 {error}
               </p>
             )}

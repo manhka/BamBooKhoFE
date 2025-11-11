@@ -5,8 +5,10 @@ import { getProducts, archiveProduct } from "../services/productService";
 import { getAllBrands } from "../services/brandService";
 import { getAllCategories } from "../services/categoryService";
 import { Link } from "react-router-dom";
+import { useApiWithErrorRedirect } from "../hooks/useApiWithErrorRedirect";
 
 const ProductList = () => {
+  const { callApi } = useApiWithErrorRedirect();
   const [products, setProducts] = useState([]);
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -29,8 +31,8 @@ const ProductList = () => {
     const fetchFiltersData = async () => {
       try {
         const [brandRes, categoryRes] = await Promise.all([
-          getAllBrands(),
-          getAllCategories(),
+          callApi(getAllBrands),
+          callApi(getAllCategories),
         ]);
         setBrands(brandRes.data || []);
         setCategories(categoryRes.data || []);
@@ -46,7 +48,7 @@ const ProductList = () => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const result = await getProducts({
+        const result = await callApi(getProducts, {
           BrandID: filters.BrandID,
           CategoryID: filters.CategoryID,
           keyword: filters.keyword,
@@ -77,7 +79,8 @@ const ProductList = () => {
     if (!modalProduct) return;
     try {
       setModalLoading(true);
-      const res = await archiveProduct(
+      const res = await callApi(
+        archiveProduct,
         modalProduct.BarcodeProduct,
         !modalProduct.IsArchive
       );

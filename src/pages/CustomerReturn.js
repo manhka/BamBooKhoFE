@@ -5,8 +5,11 @@ import {
   createCustomerReturn,
 } from "../services/customerReturnService";
 import { Button, Card, Form, Alert } from "react-bootstrap";
+import { useApiWithErrorRedirect } from "../hooks/useApiWithErrorRedirect";
 
 const CustomerReturn = () => {
+  const { callApi } = useApiWithErrorRedirect();
+
   const { exportDetailId } = useParams();
   const navigate = useNavigate();
 
@@ -19,8 +22,9 @@ const CustomerReturn = () => {
 
   useEffect(() => {
     const fetchProduct = async () => {
+      setLoading(true);
       try {
-        const res = await getWarrantyProductById(exportDetailId);
+        const res = await callApi(() => getWarrantyProductById(exportDetailId));
         setProduct(res.data);
         setQuantity(res.data.RemainingQuantity); // default max
       } catch (err) {
@@ -55,14 +59,14 @@ const CustomerReturn = () => {
     }
 
     try {
-      await createCustomerReturn({
+      const payload = {
         ReturnDate: new Date(),
-        UserID: 1, // ví dụ user hiện tại
         ExportID: product.ExportID,
         BarcodeProduct: product.BarcodeProduct,
         Quantity: quantity,
         Reason: reason,
-      });
+      };
+      await callApi(createCustomerReturn, payload);
       setAlertMessage("Trả hàng thành công!");
       setTimeout(() => navigate(-1), 1500); // quay về trang trước
     } catch (err) {

@@ -1,9 +1,22 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import {
+  getAllActivities,
+  getActivitiesByStaff,
+  assignActivitiesToStaff,
+  removeStaffActivity,
+} from "../services/activityService";
+import {
+  toggleUserStatus,
+  editUser,
+  getEmployeesByRole,
+} from "../services/userService";
 import { Pencil, Power, PowerOff, Search, Plus, Trash2 } from "lucide-react";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { showAlert } from "../utils/toast";
+import { useApiWithErrorRedirect } from "../hooks/useApiWithErrorRedirect";
 
 const StaffList = () => {
+  const { callApi } = useApiWithErrorRedirect();
+
   const [employees, setEmployees] = useState([]);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -17,17 +30,14 @@ const StaffList = () => {
     Password: "",
     Phone: "",
   });
-  const [alertMessage, setAlertMessage] = useState("");
-  const [alertType, setAlertType] = useState("");
+
   const token = localStorage.getItem("token");
 
   const fetchEmployees = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/api/users/role", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const employees = await callApi(getEmployeesByRole);
 
-      const normalized = res.data.map((emp) => ({
+      const normalized = employees.map((emp) => ({
         ...emp,
         Status:
           emp.Status === true || emp.Status === "1" || emp.Status === 1 ? 1 : 0,
@@ -35,36 +45,24 @@ const StaffList = () => {
 
       const withActivities = await Promise.all(
         normalized.map(async (emp) => {
-          try {
-            const actRes = await axios.get(
-              `http://localhost:3000/api/activities/staff-activities/${emp.UserID}`,
-              { headers: { Authorization: `Bearer ${token}` } }
-            );
-            return { ...emp, activities: actRes.data || [] };
-          } catch {
-            return { ...emp, activities: [] };
-          }
+          const act = await callApi(getActivitiesByStaff, emp.UserID);
+          return { ...emp, activities: act || [] };
         })
       );
 
       setEmployees(withActivities);
     } catch (error) {
-      console.error(
-        "Lỗi tải nhân viên:",
-        error.response?.data || error.message
-      );
-      showAlert("Không thể tải danh sách nhân viên.", "danger");
+      console.log("Lỗi tải:", error);
+      showAlert("Không thể tải danh sách nhân viên", "danger");
     }
   };
 
   const fetchAllActivities = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/api/activities/view", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setActivities(res.data);
+      const data = await callApi(getAllActivities);
+      setActivities(data);
     } catch (error) {
-      console.error("Lỗi tải activity:", error.response?.data || error.message);
+      console.error("Lỗi tải activity:", error);
     }
   };
 
@@ -77,38 +75,26 @@ const StaffList = () => {
     setCurrentPage(1);
   }, [search, itemsPerPage]);
 
-  const showAlert = (message, type) => {
-    setAlertMessage(message);
-    setAlertType(type);
-    setTimeout(() => {
-      setAlertMessage("");
-      setAlertType("");
-    }, 3000);
-  };
   const handleToggle = async (id) => {
     try {
-      await axios.put(
-        `http://localhost:3000/api/users/toggle/${id}`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
+      await callApi(toggleUserStatus, id);
       setEmployees((prev) =>
         prev.map((emp) =>
           emp.UserID === id ? { ...emp, Status: emp.Status === 1 ? 0 : 1 } : emp
         )
       );
-
-      // showAlert("Đã thay đổi trạng thái nhân viên.", "success");
+      showAlert("Đã thay đổi trạng thái nhân viên!", "success");
     } catch (error) {
-      console.error("Lỗi toggle:", error.response?.data || error.message);
+      console.error("Lỗi toggle:", error);
       showAlert("Không thể thay đổi trạng thái nhân viên.", "danger");
     }
   };
   const handleEdit = async (id) => {
     const user = employees.find((e) => e.UserID === id);
     if (!user) return;
+
     setSelectedUser(user);
+
     setFormData({
       Username: user.Username,
       Password: "",
@@ -116,12 +102,8 @@ const StaffList = () => {
     });
 
     try {
-      const res = await axios.get(
-        `http://localhost:3000/api/activities/staff-activities/${id}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setStaffActivities(res.data || []);
-      console.log(res.data);
+      const activities = await callApi(getActivitiesByStaff, id);
+      setStaffActivities(activities || []);
     } catch (err) {
       console.error("Lỗi load activity nhân viên:", err);
       setStaffActivities([]);
@@ -136,22 +118,15 @@ const StaffList = () => {
   };
   const handleSave = async () => {
     try {
-      await axios.put(
-        `http://localhost:3000/api/users/edit/${selectedUser.UserID}`,
-        formData,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
+      const res = await callApi(editUser, selectedUser.UserID, formData);
+      if (res === undefined) return;
       const newActivities = staffActivities.filter((a) => a.isNew);
       if (newActivities.length > 0) {
         const activityIds = newActivities.map((a) => a.ActivityID);
-        await axios.post(
-          "http://localhost:3000/api/activities/staff-activities",
-          {
-            UserID: selectedUser.UserID,
-            ActivityID: activityIds,
-          },
-          { headers: { Authorization: `Bearer ${token}` } }
+        await callApi(
+          assignActivitiesToStaff,
+          selectedUser.UserID,
+          activityIds
         );
       }
 
@@ -159,7 +134,7 @@ const StaffList = () => {
       fetchEmployees();
       showAlert("Cập nhật nhân viên và giao hoạt động thành công!", "success");
     } catch (error) {
-      console.error("Lỗi lưu:", error.response?.data || error.message);
+      console.error("Lỗi lưu:", error);
       showAlert("Không thể lưu thay đổi.", "danger");
     }
   };
@@ -188,19 +163,13 @@ const StaffList = () => {
     ]);
   };
   const handleRemoveActivity = async (staffActivityId) => {
-    try {
-      await axios.delete(
-        `http://localhost:3000/api/activities/staff-activities/${staffActivityId}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      showAlert("Đã xóa activity khỏi nhân viên!", "success");
+    const res = await callApi(removeStaffActivity, staffActivityId);
+    if (res !== undefined) {
       setStaffActivities((prev) =>
         prev.filter((a) => a.StaffActivityID !== staffActivityId)
       );
       fetchEmployees();
-    } catch (error) {
-      console.error("Lỗi xóa activity:", error);
-      showAlert("Không thể xóa activity.", "danger");
+      showAlert("Đã xóa activity khỏi nhân viên!", "success");
     }
   };
 
@@ -214,17 +183,6 @@ const StaffList = () => {
 
   return (
     <div className="container mt-4">
-      {alertMessage && (
-        <p
-          className={`text-center fw-bold mt-2 ${
-            alertType === "success" ? "text-success" : "text-danger"
-          }`}
-          style={{ fontSize: "20px" }}
-        >
-          {alertMessage}
-        </p>
-      )}
-
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2 className="fw-bold mt-5">Danh sách nhân viên</h2>
         <div className="input-group" style={{ maxWidth: "300px" }}>

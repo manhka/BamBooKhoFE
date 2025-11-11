@@ -5,8 +5,11 @@ import { getListStockWarningProducts } from "../services/productService";
 import { getAllBrands } from "../services/brandService";
 import { getAllCategories } from "../services/categoryService";
 import { Link } from "react-router-dom";
+import { useApiWithErrorRedirect } from "../hooks/useApiWithErrorRedirect";
 
 const LowStockProductList = () => {
+  const { callApi } = useApiWithErrorRedirect();
+
   const [products, setProducts] = useState([]);
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -25,8 +28,8 @@ const LowStockProductList = () => {
     const fetchFiltersData = async () => {
       try {
         const [brandRes, categoryRes] = await Promise.all([
-          getAllBrands(),
-          getAllCategories(),
+          callApi(() => getAllBrands()),
+          callApi(() => getAllCategories()),
         ]);
         setBrands(brandRes.data || []);
         setCategories(categoryRes.data || []);
@@ -42,11 +45,13 @@ const LowStockProductList = () => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const result = await getListStockWarningProducts({
-          BrandID: filters.BrandID,
-          CategoryID: filters.CategoryID,
-          keyword: filters.keyword,
-        });
+        const result = await callApi(() =>
+          getListStockWarningProducts({
+            BrandID: filters.BrandID,
+            CategoryID: filters.CategoryID,
+            keyword: filters.keyword,
+          })
+        );
         setProducts(result.data || []);
       } catch (err) {
         console.error(err);

@@ -2,17 +2,18 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { getProductByBarcode } from "../services/productService";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useApiWithErrorRedirect } from "../hooks/useApiWithErrorRedirect";
 
 const ProductDetail = () => {
   const { barcode } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const { callApi } = useApiWithErrorRedirect();
   useEffect(() => {
     const fetchProduct = async () => {
       setLoading(true);
       try {
-        const res = await getProductByBarcode(barcode);
+        const res = await callApi(() => getProductByBarcode(barcode));
         setProduct(res.product);
       } catch (err) {
         console.error("Error fetching product detail:", err);

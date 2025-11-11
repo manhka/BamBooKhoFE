@@ -7,8 +7,12 @@ import {
   restoreBrand,
 } from "../services/brandService";
 import { useNavigate } from "react-router-dom";
+import { showAlert } from "../utils/toast";
+import { useApiWithErrorRedirect } from "../hooks/useApiWithErrorRedirect";
 
 const BrandList = () => {
+  const { callApi } = useApiWithErrorRedirect();
+
   const navigate = useNavigate();
   const [brands, setBrands] = useState([]);
   const [filteredBrands, setFilteredBrands] = useState([]);
@@ -17,7 +21,7 @@ const BrandList = () => {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedItems, setSelectedItems] = useState([]);
-  const pageSize = 10;
+  const pageSize = 8;
 
   useEffect(() => {
     fetchBrands();
@@ -34,7 +38,7 @@ const BrandList = () => {
   const fetchBrands = async () => {
     setLoading(true);
     try {
-      const result = await getAllBrands(showArchived);
+      const result = await callApi(() => getAllBrands(showArchived));
       setBrands(result.data || []);
     } catch (error) {
       console.error("Error fetching brands:", error);
@@ -59,26 +63,22 @@ const BrandList = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Bạn có chắc muốn xóa thương hiệu này?")) {
-      try {
-        await deleteBrand(id);
-        alert("Xóa thương hiệu thành công!");
-        fetchBrands();
-      } catch (error) {
-        alert("Lỗi khi xóa thương hiệu: " + error.message);
-      }
+    try {
+      await callApi(() => deleteBrand(id));
+      showAlert("Lưu trữ thương hiệu thành công!", "success");
+      fetchBrands();
+    } catch (error) {
+      showAlert("Lỗi khi lưu trữ thương hiệu: " + error.message, "danger");
     }
   };
 
   const handleRestore = async (id) => {
-    if (window.confirm("Bạn có chắc muốn khôi phục thương hiệu này?")) {
-      try {
-        await restoreBrand(id);
-        alert("Khôi phục thương hiệu thành công!");
-        fetchBrands();
-      } catch (error) {
-        alert("Lỗi khi khôi phục thương hiệu: " + error.message);
-      }
+    try {
+      await callApi(() => restoreBrand(id));
+      showAlert("Khôi phục thương hiệu thành công!", "success");
+      fetchBrands();
+    } catch (error) {
+      showAlert("Lỗi khi khôi phục thương hiệu: " + error.message, "danger");
     }
   };
 
@@ -122,7 +122,6 @@ const BrandList = () => {
           <div>
             <h3 className="m-0">Danh sách thương hiệu</h3>
             <p className="text-muted mb-0" style={{ fontSize: "0.9rem" }}>
-              Quản lý danh sách thương hiệu sản phẩm của bạn.
               {selectedItems.length > 0 && (
                 <span className="badge bg-primary ms-2">
                   {selectedItems.length} đã chọn
@@ -178,10 +177,6 @@ const BrandList = () => {
           }}
         >
           <h5 className="mb-1 fw-semibold">Thương hiệu</h5>
-          <p className="text-muted mb-0" style={{ fontSize: "0.9rem" }}>
-            Quản lý thương hiệu sản phẩm. Nhấp vào tên thương hiệu để xem chi
-            tiết.
-          </p>
         </div>
 
         {/* Table Content */}
@@ -202,13 +197,7 @@ const BrandList = () => {
               }}
             >
               <tr>
-                <th style={{ width: "50px", textAlign: "center" }}>
-                  <input
-                    type="checkbox"
-                    checked={isAllSelected}
-                    onChange={handleSelectAll}
-                  />
-                </th>
+                <th style={{ width: "50px", textAlign: "center" }}>STT</th>
                 <th style={{ minWidth: "250px" }}>Tên thương hiệu</th>
                 <th style={{ width: "120px", textAlign: "center" }}>Mã</th>
                 <th style={{ width: "150px", textAlign: "center" }}>
@@ -227,16 +216,12 @@ const BrandList = () => {
                   </td>
                 </tr>
               ) : currentBrands.length > 0 ? (
-                currentBrands.map((brand) => (
+                currentBrands.map((brand, idx) => (
                   <tr key={brand.BrandID}>
                     <td
                       style={{ textAlign: "center", verticalAlign: "middle" }}
                     >
-                      <input
-                        type="checkbox"
-                        checked={selectedItems.includes(brand.BrandID)}
-                        onChange={() => handleSelectItem(brand.BrandID)}
-                      />
+                      <div type="checkbox">{indexOfFirst + idx + 1}</div>
                     </td>
                     <td style={{ verticalAlign: "middle" }}>
                       <div className="d-flex align-items-center">
@@ -294,7 +279,7 @@ const BrandList = () => {
                           <button
                             className="btn btn-sm btn-danger"
                             onClick={() => handleDelete(brand.BrandID)}
-                            title="Xóa"
+                            title="Lưu trữ"
                           >
                             <FaTrash />
                           </button>

@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { createCategory } from "../services/categoryService";
 import { useNavigate } from "react-router-dom";
+import { showAlert } from "../utils/toast";
+import { useApiWithErrorRedirect } from "../hooks/useApiWithErrorRedirect";
 
 const CategoryAdd = () => {
+  const { callApi } = useApiWithErrorRedirect();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     CategoryName: "",
@@ -38,13 +41,13 @@ const CategoryAdd = () => {
 
     setLoading(true);
     try {
-      await createCategory(formData);
-      alert("Thêm danh mục thành công!");
+      await callApi(() => createCategory(formData));
+      showAlert("Thêm danh mục thành công!", "success");
       navigate("/categories");
     } catch (error) {
       const errorMessage =
         error.response?.data?.message || "Lỗi khi thêm danh mục";
-      alert(errorMessage);
+      showAlert(errorMessage, "danger");
     } finally {
       setLoading(false);
     }
@@ -82,7 +85,9 @@ const CategoryAdd = () => {
                     onChange={handleChange}
                   />
                   {errors.CategoryName && (
-                    <div className="invalid-feedback">{errors.CategoryName}</div>
+                    <div className="invalid-feedback">
+                      {errors.CategoryName}
+                    </div>
                   )}
                 </div>
 

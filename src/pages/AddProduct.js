@@ -4,8 +4,12 @@ import React, { useEffect, useState } from "react";
 import { getAllCategories } from "../services/categoryService";
 import { getAllBrands } from "../services/brandService";
 import { createProduct } from "../services/productService";
+import { useApiWithErrorRedirect } from "../hooks/useApiWithErrorRedirect";
+import { showAlert } from "../utils/toast";
 
 const AddProduct = () => {
+  const { callApi } = useApiWithErrorRedirect();
+
   const [product, setProduct] = useState({
     BarcodeProduct: "",
     ProductName: "",
@@ -73,8 +77,8 @@ const AddProduct = () => {
     const loadOptions = async () => {
       try {
         const [catRes, brandRes] = await Promise.all([
-          getAllCategories(),
-          getAllBrands(),
+          callApi(() => getAllCategories()),
+          callApi(() => getAllBrands()),
         ]);
         setCategories(catRes.data || catRes);
         setBrands(brandRes.data || brandRes);
@@ -183,8 +187,8 @@ const AddProduct = () => {
     const payload = { ...product, Variants: variants };
 
     try {
-      await createProduct(payload);
-      alert("Thêm sản phẩm thành công");
+      await callApi(() => createProduct(payload));
+      showAlert("Thêm sản phẩm thành công!", "success");
 
       // reset form
       setProduct({
@@ -203,7 +207,7 @@ const AddProduct = () => {
       setErrors({});
     } catch (err) {
       console.error(err);
-      alert("Lỗi khi lưu sản phẩm");
+      showAlert(err.message.message || err.message, "danger");
     }
   };
 

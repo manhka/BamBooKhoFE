@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {
-  getCategoryById,
-  updateCategory,
-} from "../services/categoryService";
+import { getCategoryById, updateCategory } from "../services/categoryService";
 import { useNavigate, useParams } from "react-router-dom";
+import { showAlert } from "../utils/toast";
+import { useApiWithErrorRedirect } from "../hooks/useApiWithErrorRedirect";
 
 const CategoryEdit = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { callApi } = useApiWithErrorRedirect();
   const [formData, setFormData] = useState({
     CategoryName: "",
     Description: "",
@@ -23,13 +23,13 @@ const CategoryEdit = () => {
 
   const fetchCategory = async () => {
     try {
-      const result = await getCategoryById(id);
+      const result = await callApi(() => getCategoryById(id));
       setFormData({
         CategoryName: result.data.CategoryName || "",
         Description: result.data.Description || "",
       });
     } catch (error) {
-      alert("Lỗi khi tải danh mục: " + error.message);
+      showAlert("Lỗi khi tải danh mục!", "danger");
       navigate("/categories");
     } finally {
       setFetching(false);
@@ -62,13 +62,13 @@ const CategoryEdit = () => {
 
     setLoading(true);
     try {
-      await updateCategory(id, formData);
-      alert("Cập nhật danh mục thành công!");
+      await callApi(() => updateCategory(id, formData));
+      showAlert("Cập nhật danh mục thành công!", "success");
       navigate("/categories");
     } catch (error) {
       const errorMessage =
         error.response?.data?.message || "Lỗi khi cập nhật danh mục";
-      alert(errorMessage);
+      showAlert(errorMessage, "danger");
     } finally {
       setLoading(false);
     }
@@ -110,7 +110,9 @@ const CategoryEdit = () => {
                     onChange={handleChange}
                   />
                   {errors.CategoryName && (
-                    <div className="invalid-feedback">{errors.CategoryName}</div>
+                    <div className="invalid-feedback">
+                      {errors.CategoryName}
+                    </div>
                   )}
                 </div>
 

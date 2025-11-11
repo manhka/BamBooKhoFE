@@ -7,8 +7,11 @@ import {
   restoreCategory,
 } from "../services/categoryService";
 import { useNavigate } from "react-router-dom";
+import { showAlert } from "../utils/toast";
+import { useApiWithErrorRedirect } from "../hooks/useApiWithErrorRedirect";
 
 const CategoryList = () => {
+  const { callApi } = useApiWithErrorRedirect();
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [filteredCategories, setFilteredCategories] = useState([]);
@@ -17,7 +20,7 @@ const CategoryList = () => {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedItems, setSelectedItems] = useState([]);
-  const pageSize = 10;
+  const pageSize = 8;
 
   useEffect(() => {
     fetchCategories();
@@ -34,7 +37,7 @@ const CategoryList = () => {
   const fetchCategories = async () => {
     setLoading(true);
     try {
-      const result = await getAllCategories(showArchived);
+      const result = await callApi(() => getAllCategories(showArchived));
       setCategories(result.data || []);
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -59,26 +62,22 @@ const CategoryList = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Bạn có chắc muốn xóa danh mục này?")) {
-      try {
-        await deleteCategory(id);
-        alert("Xóa danh mục thành công!");
-        fetchCategories();
-      } catch (error) {
-        alert("Lỗi khi xóa danh mục: " + error.message);
-      }
+    try {
+      await callApi(() => deleteCategory(id));
+      showAlert("Lưu trữ danh mục thành công!", "success");
+      fetchCategories();
+    } catch (error) {
+      showAlert("Lỗi khi Lưu trữ danh mục: " + error.message, "danger");
     }
   };
 
   const handleRestore = async (id) => {
-    if (window.confirm("Bạn có chắc muốn khôi phục danh mục này?")) {
-      try {
-        await restoreCategory(id);
-        alert("Khôi phục danh mục thành công!");
-        fetchCategories();
-      } catch (error) {
-        alert("Lỗi khi khôi phục danh mục: " + error.message);
-      }
+    try {
+      await callApi(() => restoreCategory(id));
+      showAlert("Khôi phục danh mục thành công!", "success");
+      fetchCategories();
+    } catch (error) {
+      showAlert("Lỗi khi khôi phục danh mục: " + error.message, "danger");
     }
   };
 
@@ -122,7 +121,6 @@ const CategoryList = () => {
           <div>
             <h3 className="m-0">Danh sách danh mục</h3>
             <p className="text-muted mb-0" style={{ fontSize: "0.9rem" }}>
-              Quản lý danh sách danh mục sản phẩm của bạn.
               {selectedItems.length > 0 && (
                 <span className="badge bg-primary ms-2">
                   {selectedItems.length} đã chọn
@@ -178,9 +176,6 @@ const CategoryList = () => {
           }}
         >
           <h5 className="mb-1 fw-semibold">Danh mục</h5>
-          <p className="text-muted mb-0" style={{ fontSize: "0.9rem" }}>
-            Quản lý danh mục sản phẩm. Nhấp vào tên danh mục để xem chi tiết.
-          </p>
         </div>
 
         {/* Table Content */}
@@ -201,13 +196,7 @@ const CategoryList = () => {
               }}
             >
               <tr>
-                <th style={{ width: "50px", textAlign: "center" }}>
-                  <input
-                    type="checkbox"
-                    checked={isAllSelected}
-                    onChange={handleSelectAll}
-                  />
-                </th>
+                <th style={{ width: "50px", textAlign: "center" }}>STT</th>
                 <th style={{ minWidth: "250px" }}>Tên danh mục</th>
                 <th style={{ width: "120px", textAlign: "center" }}>Mã</th>
                 <th style={{ width: "150px", textAlign: "center" }}>
@@ -226,16 +215,12 @@ const CategoryList = () => {
                   </td>
                 </tr>
               ) : currentCategories.length > 0 ? (
-                currentCategories.map((cat) => (
+                currentCategories.map((cat, idx) => (
                   <tr key={cat.CategoryID}>
                     <td
                       style={{ textAlign: "center", verticalAlign: "middle" }}
                     >
-                      <input
-                        type="checkbox"
-                        checked={selectedItems.includes(cat.CategoryID)}
-                        onChange={() => handleSelectItem(cat.CategoryID)}
-                      />
+                      <div type="checkbox">{indexOfFirst + idx + 1}</div>
                     </td>
                     <td style={{ verticalAlign: "middle" }}>
                       <div>
@@ -291,7 +276,7 @@ const CategoryList = () => {
                           <button
                             className="btn btn-sm btn-danger"
                             onClick={() => handleDelete(cat.CategoryID)}
-                            title="Xóa"
+                            title="Lưu trữ"
                           >
                             <FaTrash />
                           </button>

@@ -27,15 +27,11 @@ export const getAllCustomers = async () => {
  */
 export const createCustomer = async (customerData) => {
   try {
-    // const token = localStorage.getItem("token"); // Tạm bỏ qua token
     const response = await api.post(
       API_ENDPOINTS.CUSTOMERS.CREATE,
-      customerData,
-      {
-        // headers: { Authorization: `Bearer ${token}` }, // Tạm bỏ qua header
-      }
+      customerData
     );
-    return response.data; // Trả về { status, message, data: newCustomer }
+    return response.data;
   } catch (error) {
     console.error(
       "Create Customer error:",

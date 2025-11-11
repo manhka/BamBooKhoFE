@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Table, Badge, Spinner, Pagination } from "react-bootstrap";
 import { getCustomerReturnOrders } from "../services/customerReturnService";
+import { useApiWithErrorRedirect } from "../hooks/useApiWithErrorRedirect";
 
 const CustomerReturnList = () => {
   const [returns, setReturns] = useState([]);
@@ -8,14 +9,17 @@ const CustomerReturnList = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 8;
+  const { callApi } = useApiWithErrorRedirect();
 
   useEffect(() => {
     const fetchReturns = async () => {
+      setLoading(true); // bật loading
       try {
-        const res = await getCustomerReturnOrders();
+        const res = await callApi(() => getCustomerReturnOrders());
         setReturns(res.data);
       } catch (err) {
         console.error(err);
+        // Có thể set alert nếu muốn thông báo lỗi
       } finally {
         setLoading(false);
       }

@@ -4,8 +4,11 @@ import { FaSearch, FaTimes } from "react-icons/fa";
 import { searchCustomers } from "../services/customerService";
 import { getWarrantyProducts } from "../services/customerReturnService";
 import { Link } from "react-router-dom";
+import { useApiWithErrorRedirect } from "../hooks/useApiWithErrorRedirect";
 
 const ProductWarrantyCheck = () => {
+  const { callApi } = useApiWithErrorRedirect();
+
   const [filters, setFilters] = useState({
     customerName: "",
     customerId: null,
@@ -67,7 +70,7 @@ const ProductWarrantyCheck = () => {
 
     setLoading(true);
     try {
-      const res = await getWarrantyProducts({
+      const res = await callApi(getWarrantyProducts, {
         customerId: filters.customerId,
         barcodeProduct: filters.productBarcode,
       });
@@ -241,7 +244,7 @@ const ProductWarrantyCheck = () => {
                         Trả hàng
                       </Link>
 
-                      <Button
+                      {/* <Button
                         size="sm"
                         variant={isDisabled ? "secondary" : "warning"}
                         onClick={
@@ -255,7 +258,7 @@ const ProductWarrantyCheck = () => {
                         }
                       >
                         Đổi hàng
-                      </Button>
+                      </Button> */}
                     </td>
                   </tr>
                 );

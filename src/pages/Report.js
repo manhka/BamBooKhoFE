@@ -6,13 +6,17 @@ import {
   getQuarterReport,
   exportQuarterReport,
 } from "../services/reportService";
+import { useApiWithErrorRedirect } from "../hooks/useApiWithErrorRedirect";
+
 const Report = () => {
   const [quarter, setQuarter] = useState("");
   const [year, setYear] = useState(new Date().getFullYear());
   const [data, setData] = useState([]);
+  const { callApi } = useApiWithErrorRedirect();
+
   const handleFetch = async () => {
     try {
-      const rows = await getQuarterReport({ quarter, year });
+      const rows = await callApi(getQuarterReport, { quarter, year });
       setData(rows);
     } catch (err) {
       alert(err.message || "Lỗi khi lấy dữ liệu báo cáo!");
@@ -36,15 +40,15 @@ const Report = () => {
 
   const handleExportExcel = async () => {
     try {
-      await exportQuarterReport({ quarter, year });
+      await callApi(exportQuarterReport, { quarter, year });
     } catch (err) {
       alert(err.message || "Không thể xuất file Excel!");
     }
   };
 
   // Tính tổng tiền
-  const totalAmount = data.reduce((sum, row) => {
-    const value = parseFloat(row.Total.replace(/\D/g, "")) || 0;
+  const totalAmount = (data || []).reduce((sum, row) => {
+    const value = parseFloat(row.Total?.replace(/\D/g, "")) || 0;
     return sum + value;
   }, 0);
 
@@ -115,14 +119,14 @@ const Report = () => {
           </tr>
         </thead>
         <tbody>
-          {data.length === 0 ? (
+          {data?.length === 0 ? (
             <tr>
               <td colSpan={7} className="text-center">
                 Không có dữ liệu
               </td>
             </tr>
           ) : (
-            data.map((row, idx) => (
+            data?.map((row, idx) => (
               <tr key={idx}>
                 <td>{row.Type}</td>
                 <td>{row.Date}</td>
@@ -135,7 +139,7 @@ const Report = () => {
             ))
           )}
         </tbody>
-        {data.length > 0 && (
+        {data?.length > 0 && (
           <tfoot>
             <tr className="table-success fw-bold">
               <td colSpan={5} className="text-end">

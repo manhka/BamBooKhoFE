@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {
-  getBrandById,
-  updateBrand,
-} from "../services/brandService";
+import { getBrandById, updateBrand } from "../services/brandService";
 import { useNavigate, useParams } from "react-router-dom";
+import { showAlert } from "../utils/toast";
+import { useApiWithErrorRedirect } from "../hooks/useApiWithErrorRedirect";
 
 const BrandEdit = () => {
+  const { callApi } = useApiWithErrorRedirect();
+
   const navigate = useNavigate();
   const { id } = useParams();
   const [formData, setFormData] = useState({
@@ -23,13 +24,13 @@ const BrandEdit = () => {
 
   const fetchBrand = async () => {
     try {
-      const result = await getBrandById(id);
+      const result = await callApi(() => getBrandById(id));
       setFormData({
         BrandName: result.data.BrandName || "",
         Description: result.data.Description || "",
       });
     } catch (error) {
-      alert("Lỗi khi tải thương hiệu: " + error.message);
+      showAlert("Lỗi khi tải thương hiệu!", "danger");
       navigate("/brands");
     } finally {
       setFetching(false);
@@ -62,13 +63,13 @@ const BrandEdit = () => {
 
     setLoading(true);
     try {
-      await updateBrand(id, formData);
-      alert("Cập nhật thương hiệu thành công!");
+      await callApi(() => updateBrand(id, formData));
+      showAlert("Cập nhật thương hiệu thành công!", "success");
       navigate("/brands");
     } catch (error) {
       const errorMessage =
         error.response?.data?.message || "Lỗi khi cập nhật thương hiệu";
-      alert(errorMessage);
+      showAlert(errorMessage, "danger");
     } finally {
       setLoading(false);
     }
