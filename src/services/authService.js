@@ -1,9 +1,9 @@
-import api from "./api";
+import { apiPublic, api } from "./api";
 import { API_ENDPOINTS } from "../constants/api";
 
 export const login = async (username, password) => {
   try {
-    const res = await api.post(API_ENDPOINTS.AUTH.LOGIN, {
+    const res = await apiPublic.post(API_ENDPOINTS.AUTH.LOGIN, {
       username,
       password,
     });

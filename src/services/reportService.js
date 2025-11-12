@@ -1,4 +1,4 @@
-import api from "./api";
+import { api } from "./api";
 import { API_ENDPOINTS } from "../constants/api";
 import { saveAs } from "file-saver";
 import { showAlert } from "../utils/toast";

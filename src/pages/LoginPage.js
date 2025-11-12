@@ -13,23 +13,38 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       const res = await login(username, password);
+
+      // Lưu token và user vào localStorage
       localStorage.setItem("token", res.token);
-      const userData = localStorage.setItem("user", JSON.stringify(res.user));
+      localStorage.setItem("user", JSON.stringify(res.user));
+
+      // Lấy lại user từ localStorage
+      const userData = localStorage.getItem("user");
       let user;
+
       try {
         user = JSON.parse(userData);
       } catch (error) {
         console.error("Invalid user data in localStorage:", error);
-        navigate("/error/500");
+        // navigate("/error/500");
+        return;
       }
+
       const roleID = Number(user?.roleID);
-      if (roleID === 1) {
-        navigate("/admin/dashboard");
+      if (!res.user.status) {
+        setError("Tài khoản đã bị khóa");
       } else {
-        navigate("/staff/dashboard");
+        if (roleID === 1) {
+          console.log("ADDDDMIN");
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/staff/dashboard");
+        }
       }
     } catch (err) {
-      setError(err.response?.data?.message || "Đăng nhập thất bại");
+      setError(
+        err?.message || "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin."
+      );
     }
   };
 

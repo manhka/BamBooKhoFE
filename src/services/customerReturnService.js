@@ -1,4 +1,4 @@
-import api from "./api"; // axios instance
+import { api } from "./api"; // axios instance
 import { API_ENDPOINTS } from "../constants/api";
 
 // Lấy danh sách sản phẩm bảo hành theo filter

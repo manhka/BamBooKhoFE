@@ -1,11 +1,12 @@
-import api from "./api";
+import { api } from "./api";
 import { API_ENDPOINTS } from "../constants/api";
 
 export const getAllBrands = async (archive) => {
   try {
-    const url = archive !== undefined 
-      ? `${API_ENDPOINTS.BRANDS.LIST}?archive=${archive}`
-      : API_ENDPOINTS.BRANDS.LIST;
+    const url =
+      archive !== undefined
+        ? `${API_ENDPOINTS.BRANDS.LIST}?archive=${archive}`
+        : API_ENDPOINTS.BRANDS.LIST;
     const response = await api.get(url);
     return response.data;
   } catch (error) {

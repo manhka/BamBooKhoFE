@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { getImportExportData } from "../services/chartService";
 import {
   BarChart,
   Bar,
@@ -10,8 +10,11 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { useApiWithErrorRedirect } from "../hooks/useApiWithErrorRedirect";
 
 const Chart = () => {
+  const { callApi } = useApiWithErrorRedirect();
+
   const [data, setData] = useState([]);
   const [year, setYear] = useState(new Date().getFullYear());
   const [loading, setLoading] = useState(false);
@@ -23,11 +26,8 @@ const Chart = () => {
   const fetchData = async (selectedYear) => {
     try {
       setLoading(true);
-      const res = await axios.get(
-        `http://localhost:3000/api/charts/import-export?year=${selectedYear}`
-      );
-      setData(res.data);
-      console.log(res.data);
+      const res = await callApi(() => getImportExportData(selectedYear));
+      setData(res);
     } catch (err) {
       console.error(err);
     } finally {

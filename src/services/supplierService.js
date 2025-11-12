@@ -1,4 +1,4 @@
-import api from "./api"; 
+import { api } from "./api";
 import { API_ENDPOINTS } from "../constants/api";
 
 /**
@@ -9,13 +9,15 @@ export const getAllSuppliers = async () => {
     const token = localStorage.getItem("token");
     const response = await api.get(API_ENDPOINTS.SUPPLIERS.LIST, {
       headers: {
-        Authorization: `Bearer ${token}`, 
+        Authorization: `Bearer ${token}`,
       },
     });
-    return response.data; 
+    return response.data;
   } catch (error) {
-    console.error("Get All Suppliers error:", error.response?.data || error.message);
+    console.error(
+      "Get All Suppliers error:",
+      error.response?.data || error.message
+    );
     throw error.response?.data || { message: error.message };
   }
 };
-

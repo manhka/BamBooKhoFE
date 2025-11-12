@@ -1,14 +1,14 @@
 import axios from "axios";
 import { API_BASE_URL } from "../constants/api";
 
-const api = axios.create({
+// API có token
+export const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Thêm interceptor để tự động đính kèm token
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -20,4 +20,10 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-export default api;
+// API công khai (không có token)
+export const apiPublic = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});

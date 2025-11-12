@@ -94,4 +94,7 @@ export const API_ENDPOINTS = {
     VIEW_ALL: "/activities/view",
     ASSIGN: "/activities/staff-activities",
   },
+  CHART: {
+    IMPORT_EXPORT: (year) => `/charts/import-export?year=${year}`,
+  },
 };

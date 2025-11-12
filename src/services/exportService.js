@@ -1,5 +1,5 @@
 // services/exportService.js
-import api from "./api";
+import { api } from "./api";
 import { API_ENDPOINTS } from "../constants/api";
 
 /**
@@ -14,7 +14,10 @@ export const createExportOrder = async (orderData) => {
     });
     return response.data; // { message, exportOrder }
   } catch (error) {
-    console.error("Create Export Order error:", error.response?.data || error.message);
+    console.error(
+      "Create Export Order error:",
+      error.response?.data || error.message
+    );
     throw error.response?.data || { message: error.message };
   }
 };
@@ -28,7 +31,9 @@ export const getExportHistory = async (filters = {}) => {
     // const token = localStorage.getItem("token"); // Tạm bỏ qua token
     const params = { ...filters };
     // Xóa các filter rỗng hoặc null
-    Object.keys(params).forEach(key => (params[key] == null || params[key] === '') && delete params[key]);
+    Object.keys(params).forEach(
+      (key) => (params[key] == null || params[key] === "") && delete params[key]
+    );
 
     const response = await api.get(API_ENDPOINTS.EXPORT.LIST, {
       params,
@@ -36,7 +41,10 @@ export const getExportHistory = async (filters = {}) => {
     });
     return response.data; // { message, count, orders }
   } catch (error) {
-    console.error("Get Export History error:", error.response?.data || error.message);
+    console.error(
+      "Get Export History error:",
+      error.response?.data || error.message
+    );
     throw error.response?.data || { message: error.message };
   }
 };
@@ -46,17 +54,20 @@ export const getExportHistory = async (filters = {}) => {
  * @param {string|number} id - ID của đơn hàng xuất
  */
 export const getExportOrderDetail = async (id) => {
-    try {
-        // const token = localStorage.getItem("token"); // Tạm bỏ qua token
-        const response = await api.get(API_ENDPOINTS.EXPORT.DETAIL(id), {
-            // headers: { Authorization: `Bearer ${token}` }, // Tạm bỏ qua header
-        });
-        return response.data; // { message, order }
-    } catch (error) {
-        console.error("Get Export Order Detail error:", error.response?.data || error.message);
-        throw error.response?.data || { message: error.message };
-    }
-}
+  try {
+    // const token = localStorage.getItem("token"); // Tạm bỏ qua token
+    const response = await api.get(API_ENDPOINTS.EXPORT.DETAIL(id), {
+      // headers: { Authorization: `Bearer ${token}` }, // Tạm bỏ qua header
+    });
+    return response.data; // { message, order }
+  } catch (error) {
+    console.error(
+      "Get Export Order Detail error:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || { message: error.message };
+  }
+};
 
 /**
  * Tải file Excel cho một đơn xuất hàng
@@ -72,21 +83,24 @@ export const downloadExportOrderExcel = async (id) => {
     const url = API_ENDPOINTS.EXPORT.DOWNLOAD_EXCEL(id) + cacheBust;
     // 👆 ================================================== 👆
 
-    const response = await api.get(url, { // 👈 Dùng url mới
+    const response = await api.get(url, {
+      // 👈 Dùng url mới
       // headers: { Authorization: `Bearer ${token}` }, // Tạm bỏ qua header
-      responseType: 'blob', 
+      responseType: "blob",
     });
-    
+
     return response.data;
-    
   } catch (error) {
-    console.error("Download Export Excel error:", error.response?.data || error.message);
+    console.error(
+      "Download Export Excel error:",
+      error.response?.data || error.message
+    );
     try {
-        const errDataText = await error.response?.data?.text();
-        const parsedError = JSON.parse(errDataText);
-        throw parsedError || { message: error.message };
+      const errDataText = await error.response?.data?.text();
+      const parsedError = JSON.parse(errDataText);
+      throw parsedError || { message: error.message };
     } catch (parseError) {
-         throw { message: error.message || "Failed to download file." };
+      throw { message: error.message || "Failed to download file." };
     }
   }
 };

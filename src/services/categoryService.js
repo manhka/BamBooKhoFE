@@ -1,11 +1,12 @@
-import api from "./api";
+import { api } from "./api";
 import { API_ENDPOINTS } from "../constants/api";
 
 export const getAllCategories = async (archive) => {
   try {
-    const url = archive !== undefined 
-      ? `${API_ENDPOINTS.CATEGORIES.LIST}?archive=${archive}`
-      : API_ENDPOINTS.CATEGORIES.LIST;
+    const url =
+      archive !== undefined
+        ? `${API_ENDPOINTS.CATEGORIES.LIST}?archive=${archive}`
+        : API_ENDPOINTS.CATEGORIES.LIST;
     const response = await api.get(url);
     return response.data;
   } catch (error) {

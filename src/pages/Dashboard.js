@@ -3,7 +3,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Chart from "../components/Chart";
-import Info from "../components/Info";
 export default function Dashboard() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
@@ -27,12 +26,6 @@ export default function Dashboard() {
   return (
     <div className="d-flex vh-100 bg-light position-relative overflow-hidden p-3">
       <div className="d-flex flex-column flex-grow-1 w-100 gap-3">
-        <div
-          className="overflow-auto bg-white rounded-4 shadow-sm border p-3"
-          style={{ borderColor: "#dee2e6", flex: "4", minHeight: "200px" }}
-        >
-          <Info />
-        </div>
         <div
           className="overflow-hidden bg-white rounded-4 shadow-sm border p-3 d-flex flex-column"
           style={{ borderColor: "#dee2e6", flex: "6", minHeight: "300px" }}

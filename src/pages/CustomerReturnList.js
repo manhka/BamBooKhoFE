@@ -62,39 +62,47 @@ const CustomerReturnList = () => {
           </tr>
         </thead>
         <tbody>
-          {currentReturns.map((order, orderIndex) =>
-            order.CustomerReturnDetails.map((detail, detailIndex) => (
-              <tr key={detail.CustomerReturnDetailID}>
-                {detailIndex === 0 && (
-                  <td rowSpan={order.CustomerReturnDetails.length}>
-                    {(currentPage - 1) * rowsPerPage + orderIndex + 1}
+          {currentReturns && currentReturns.length > 0 ? (
+            currentReturns.map((order, orderIndex) =>
+              order.CustomerReturnDetails.map((detail, detailIndex) => (
+                <tr key={detail.CustomerReturnDetailID}>
+                  {detailIndex === 0 && (
+                    <td rowSpan={order.CustomerReturnDetails.length}>
+                      {(currentPage - 1) * rowsPerPage + orderIndex + 1}
+                    </td>
+                  )}
+                  <td>{detail.BarcodeProduct}</td>
+                  <td>{detail.Product.ProductName}</td>
+                  <td>{detail.Quantity}</td>
+                  <td>
+                    <Badge bg="warning" text="dark">
+                      {detail.Reason}
+                    </Badge>
                   </td>
-                )}
-                <td>{detail.BarcodeProduct}</td>
-                <td>{detail.Product.ProductName}</td>
-                <td>{detail.Quantity}</td>
-                <td>
-                  <Badge bg="warning" text="dark">
-                    {detail.Reason}
-                  </Badge>
-                </td>
-                {detailIndex === 0 && (
-                  <td rowSpan={order.CustomerReturnDetails.length}>
-                    {new Date(order.ReturnDate).toLocaleDateString()}
-                  </td>
-                )}
-                {detailIndex === 0 && (
-                  <td rowSpan={order.CustomerReturnDetails.length}>
-                    {order.ExportOrder.Customer.CustomerName}
-                  </td>
-                )}
-                {detailIndex === 0 && (
-                  <td rowSpan={order.CustomerReturnDetails.length}>
-                    {order.User.Username}
-                  </td>
-                )}
-              </tr>
-            ))
+                  {detailIndex === 0 && (
+                    <td rowSpan={order.CustomerReturnDetails.length}>
+                      {new Date(order.ReturnDate).toLocaleDateString()}
+                    </td>
+                  )}
+                  {detailIndex === 0 && (
+                    <td rowSpan={order.CustomerReturnDetails.length}>
+                      {order.ExportOrder.Customer.CustomerName}
+                    </td>
+                  )}
+                  {detailIndex === 0 && (
+                    <td rowSpan={order.CustomerReturnDetails.length}>
+                      {order.User.Username}
+                    </td>
+                  )}
+                </tr>
+              ))
+            )
+          ) : (
+            <tr>
+              <td colSpan="7" className="text-center text-muted py-3">
+                Không có dữ liệu
+              </td>
+            </tr>
           )}
         </tbody>
       </Table>
