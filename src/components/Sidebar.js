@@ -48,6 +48,13 @@ export default function Sidebar({ isOpen, onLogout, onSelectPage }) {
       roles: [1],
     },
     {
+      id: "activities",
+      label: "Hoạt động",
+      icon: FileText,
+      roles: [1],
+      submenu: [{ label: "Danh sách hoạt động", path: "/activities" }],
+    },
+    {
       id: "employees",
       label: "Nhân viên",
       icon: Users,

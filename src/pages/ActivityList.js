@@ -1,31 +1,41 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { useApiWithErrorRedirect } from "../hooks/useApiWithErrorRedirect";
+import {
+  getAllActivities,
+  createActivity,
+  updateActivity,
+  assignActivitiesToStaff,
+  removeStaffActivity,
+} from "../services/activityService";
+import { showAlert } from "../utils/toast";
 import { Edit2, Plus, Search } from "lucide-react";
 
 export default function ActivityPage() {
+  const { callApi } = useApiWithErrorRedirect();
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({ ActivityName: "", Description: "" });
+
+  // Modal & form state
+  const [createModalOpen, setCreateModalOpen] = useState(false);
   const [editModal, setEditModal] = useState({ open: false, activity: null });
+  const [form, setForm] = useState({ ActivityName: "", Description: "" });
   const [editForm, setEditForm] = useState({
     ActivityName: "",
     Description: "",
   });
-  const [createModalOpen, setCreateModalOpen] = useState(false);
+
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
+  // --- Fetch Activities ---
   const fetchActivities = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("http://localhost:3000/api/activities/view");
-      setActivities(res.data);
+      const data = await callApi(() => getAllActivities());
+      setActivities(data);
     } catch (error) {
-      console.error(
-        "❌ Lỗi lấy danh sách hoạt động:",
-        error.response?.data || error.message
-      );
+      showAlert(error.message || "Lỗi khi lấy danh sách hoạt động", "danger");
     } finally {
       setLoading(false);
     }
@@ -35,25 +45,23 @@ export default function ActivityPage() {
     fetchActivities();
   }, []);
 
+  // --- Create Activity ---
   const handleCreate = async (e) => {
     e.preventDefault();
     if (!form.ActivityName) return;
+
     try {
-      const res = await axios.post(
-        "http://localhost:3000/api/activities/create",
-        form
-      );
+      await callApi(() => createActivity(form));
+      showAlert("Tạo hoạt động thành công", "success");
       setForm({ ActivityName: "", Description: "" });
       setCreateModalOpen(false);
       fetchActivities();
     } catch (error) {
-      console.error(
-        "❌ Lỗi tạo hoạt động:",
-        error.response?.data || error.message
-      );
+      showAlert(error.message || "Lỗi khi tạo hoạt động", "danger");
     }
   };
 
+  // --- Open/Close Edit Modal ---
   const openEditModal = (activity) => {
     setEditForm({
       ActivityName: activity.ActivityName,
@@ -63,31 +71,49 @@ export default function ActivityPage() {
   };
   const closeEditModal = () => setEditModal({ open: false, activity: null });
 
+  // --- Update Activity ---
   const handleEdit = async (e) => {
     e.preventDefault();
     if (!editForm.ActivityName) {
-      return alert("Tên hoạt động không được để trống");
+      return showAlert("Tên hoạt động không được để trống", "warning");
     }
-
     try {
-      const res = await axios.put(
-        `http://localhost:3000/api/activities/${editModal.activity.ActivityID}`,
-        editForm
+      await callApi(() =>
+        updateActivity(editModal.activity.ActivityID, editForm)
       );
+      showAlert("Cập nhật hoạt động thành công", "success");
       closeEditModal();
       fetchActivities();
     } catch (error) {
-      console.error(
-        "❌ Lỗi cập nhật hoạt động:",
-        error.response?.data || error.message
-      );
+      showAlert(error.message || "Lỗi khi cập nhật hoạt động", "danger");
     }
   };
 
+  // --- Assign Activity to Staff ---
+  const handleAssign = async (userId, activityIds) => {
+    try {
+      await callApi(() => assignActivitiesToStaff(userId, activityIds));
+      showAlert("Gán hoạt động thành công", "success");
+    } catch (error) {
+      showAlert(error.message || "Lỗi khi gán hoạt động", "danger");
+    }
+  };
+
+  // --- Remove Staff Activity ---
+  const handleRemove = async (staffActivityId) => {
+    try {
+      await callApi(() => removeStaffActivity(staffActivityId));
+      showAlert("Xóa hoạt động thành công", "success");
+      fetchActivities();
+    } catch (error) {
+      showAlert(error.message || "Lỗi khi xóa hoạt động", "danger");
+    }
+  };
+
+  // --- Filter & Pagination ---
   const filteredActivities = activities.filter((act) =>
     act.ActivityName.toLowerCase().includes(search.toLowerCase())
   );
-
   const totalPages = Math.ceil(filteredActivities.length / itemsPerPage);
   const paginatedActivities = filteredActivities.slice(
     (currentPage - 1) * itemsPerPage,
@@ -97,6 +123,7 @@ export default function ActivityPage() {
 
   return (
     <div className="p-4">
+      {/* Header & Search */}
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2 className="fw-bold mt-5">Danh sách hoạt động</h2>
         <div className="d-flex align-items-center gap-2">
@@ -121,6 +148,7 @@ export default function ActivityPage() {
         </div>
       </div>
 
+      {/* Table */}
       {loading ? (
         <p>Đang tải...</p>
       ) : (
@@ -147,10 +175,16 @@ export default function ActivityPage() {
                     <td>{new Date(act.UpdatedAt).toLocaleString()}</td>
                     <td>
                       <button
-                        className="btn btn-sm btn-outline-primary"
+                        className="btn btn-sm btn-outline-primary me-2"
                         onClick={() => openEditModal(act)}
                       >
                         <Edit2 size={16} className="me-1" /> Sửa
+                      </button>
+                      <button
+                        className="btn btn-sm btn-outline-danger"
+                        onClick={() => handleRemove(act.StaffActivityID)}
+                      >
+                        Xóa
                       </button>
                     </td>
                   </tr>
@@ -165,6 +199,7 @@ export default function ActivityPage() {
             </tbody>
           </table>
 
+          {/* Pagination */}
           {totalPages > 1 && (
             <nav>
               <ul className="pagination justify-content-center">
@@ -189,6 +224,7 @@ export default function ActivityPage() {
         </>
       )}
 
+      {/* Create Modal */}
       {createModalOpen && (
         <div
           className="modal fade show d-block"
@@ -250,6 +286,7 @@ export default function ActivityPage() {
         </div>
       )}
 
+      {/* Edit Modal */}
       {editModal.open && (
         <div
           className="modal fade show d-block"

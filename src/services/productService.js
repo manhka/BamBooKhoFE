@@ -12,6 +12,7 @@ export const getProducts = async (filters = {}) => {
     if (CategoryID) params.CategoryID = CategoryID;
 
     const res = await api.get(API_ENDPOINTS.PRODUCTS.LIST, { params });
+    console.log("daa:", res.data);
     return res.data;
   } catch (error) {
     console.error("getProducts error:", error.response?.data || error.message);

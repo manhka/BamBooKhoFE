@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 // Đã đổi tên thành Modal độc lập
 import LookupBarcodeModal from "../../components/SupplierProductLookupModal/LookupBarcodeModal";
 import LookupSupplierModal from "../../components/SupplierProductLookupModal/LookupSupplierModal";
-
+import { showAlert } from "../../utils/toast";
 const getGeneralError = (err) => {
   if (err && err.general) return err.general;
   if (Array.isArray(err) && err.length > 0 && err[0].general)
@@ -37,6 +37,7 @@ const ImportUploadPage = () => {
     const loadSuppliers = async () => {
       try {
         const res = await getAllSuppliers();
+        console.log("ressss", res.data);
         const options = (res.data || []).map((s) => ({
           value: s.SupplierID,
           label: `${s.SupplierName} (ID: ${s.SupplierID})`,
@@ -77,13 +78,7 @@ const ImportUploadPage = () => {
 
     try {
       const result = await uploadImportExcel(formData);
-
-      toast.success(result.message || "Nhập hàng thành công!", {
-        position: "top-right",
-        autoClose: 3000,
-      });
-      setSuccessMessage(result.message || "Nhập hàng thành công!");
-
+      showAlert("Nhập hàng thành công!", "success");
       setSelectedFile(null);
     } catch (err) {
       console.error("Upload failed:", err);

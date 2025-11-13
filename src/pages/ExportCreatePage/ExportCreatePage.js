@@ -13,7 +13,6 @@ import { Trash2, Send, AlertTriangle, UserPlus, Pencil } from "lucide-react";
 import styles from "./ExportCreatePage.module.css";
 import DatePicker from "react-datepicker";
 import { toast } from "react-toastify"; // Import Toast
-import { useApiWithErrorRedirect } from "../../hooks/useApiWithErrorRedirect";
 
 const parseDateString = (dateString) => {
   if (!dateString) return null;
@@ -40,8 +39,6 @@ const fetchCustomers = async () => {
 };
 
 const ExportCreatePage = () => {
-  const { callApi } = useApiWithErrorRedirect();
-
   const navigate = useNavigate();
   const [customers, setCustomers] = useState([]);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
@@ -58,9 +55,9 @@ const ExportCreatePage = () => {
   // Load Customers
   useEffect(() => {
     const loadCustomers = async () => {
-      const customerData = await callApi(() => getAllCustomers(), []);
+      const customerData = await fetchCustomers();
       setCustomers(
-        customerData?.data?.map((c) => ({
+        customerData.map((c) => ({
           value: c.CustomerID,
           label: `${c.CustomerName} (${c.Phone || "N/A"})`,
         })) || []
@@ -74,11 +71,8 @@ const ExportCreatePage = () => {
     const handler = setTimeout(async () => {
       if (productSearchInput.trim().length >= 2) {
         try {
-          const result = await callApi(
-            () => getProducts({ keyword: productSearchInput }),
-            { products: [] }
-          );
-          console.log("rs:", result);
+          const result = await getProducts({ keyword: productSearchInput });
+
           const productsData = result?.data || [];
           setProductOptions(
             productsData
@@ -217,10 +211,7 @@ const ExportCreatePage = () => {
     setIsEditModalOpen(true);
     setCustomerForEdit(null);
     try {
-      const result = await callApi(
-        () => getCustomerById(selectedCustomer.value),
-        null
-      );
+      const result = await getCustomerById(selectedCustomer.value);
       if (result.status === "success") {
         setCustomerForEdit(result.data);
       } else {
@@ -303,7 +294,8 @@ const ExportCreatePage = () => {
     };
 
     try {
-      await callApi(() => createExportOrder(orderData));
+      await createExportOrder(orderData);
+
       // === SỬA: DÙNG TOAST THAY CHO alert() ===
       toast.success(`Tạo phiếu xuất thành công!`, {
         position: "top-right",

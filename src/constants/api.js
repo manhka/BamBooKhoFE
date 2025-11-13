@@ -93,6 +93,8 @@ export const API_ENDPOINTS = {
     BY_STAFF: "/activities/staff-activities",
     VIEW_ALL: "/activities/view",
     ASSIGN: "/activities/staff-activities",
+    CREATE: "/activities/create",
+    UPDATE: "/activities/update",
   },
   CHART: {
     IMPORT_EXPORT: (year) => `/charts/import-export?year=${year}`,
